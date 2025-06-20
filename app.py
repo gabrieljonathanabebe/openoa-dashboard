@@ -47,18 +47,17 @@ app = dash.Dash(
 
 
 app.layout = html.Div([
+    dcc.Location(id="url"),
 
+    # --- Sticky Header ---
     html.Div([
-        # linke Seite – später für Logo oder Titel
         html.Div("📊 Windpark-Dashboard", style={
             "fontWeight": "bold",
             "fontSize": "20px",
             "color": "#EAEAEA"
         }),
-    
-        # rechte Seite – Suchleiste + Icons + Zeit
+
         html.Div([
-            
             html.Div([
                 dcc.Input(
                     id="search-input",
@@ -74,119 +73,82 @@ app.layout = html.Div([
                     }
                 ),
                 html.Ul(id="search-suggestions", className="search-suggestions")
-            ], style={
-                "position":"relative",
-                "marginRight":"10px"
-            }),
-            # Such-Icon
+            ], style={"position": "relative", "marginRight": "10px"}),
+
             html.I(className="fas fa-search", style={
                 "fontSize": "20px",
                 "color": "#EAEAEA",
                 "marginRight": "15px"
             }),
-            # Zahnrad
+
             html.I(className="fas fa-cog", style={
                 "fontSize": "20px",
                 "color": "#EAEAEA",
                 "marginRight": "15px",
                 "cursor": "pointer"
             }),
-            # Zeit
-            html.Div(
-                id="current-time",
-                className="current-time",
-                style={
-                    "fontSize": "16px",     # bleibt bestehen
-                    "color": "#AAA",        # bleibt bestehen
-                    "minWidth": "110px"     # kannst du bei Bedarf in der CSS ersetzen
-                }
-            )
-        ], style={
-            "display": "flex",
-            "alignItems": "center"
-        })
-    ], style={
+
+            html.Div(id="current-time", className="current-time", style={
+                "fontSize": "16px",
+                "color": "#AAA",
+                "minWidth": "110px"
+            })
+        ], style={"display": "flex", "alignItems": "center"})
+    ], className="sticky-header", style={
         "display": "flex",
         "justifyContent": "space-between",
         "alignItems": "center",
         "padding": "10px 20px",
         "backgroundColor": "#2c2c2c",
         "borderBottom": "1px solid #444"
-    },className="sticky-header"),
+    }),
 
-    # Tabs
+    # --- Content Wrapper: Sidebar + Main Content ---
     html.Div([
-        dcc.Tabs(
-            id="main-tabs",
-            value="tab-home",
-            className="dash-tabs",
-            children=[
-                dcc.Tab(
-                    label="🏠 Projekt",
-                    value="tab-home",
-                    className="dash-tab",
-                    selected_className="dash-tab--selected"
-                ),
-                dcc.Tab(
-                    label="🌍 Reanalyse & Energiedaten",
-                    value="tab-data",
-                    className="dash-tab",
-                    selected_className="dash-tab--selected"
-                ),
-                dcc.Tab(
-                    label="📈 Zentrale Ergebnisse",
-                    value="tab-core",
-                    className="dash-tab",
-                    selected_className="dash-tab--selected"
-                ),
-                dcc.Tab(
-                    label="📉 Langzeitanalyse",
-                    value="tab-lt",
-                    className="dash-tab",
-                    selected_className="dash-tab--selected"
-                ),
-                dcc.Tab(
-                    label="📐 Prognosegüte & Modellvergleich",
-                    value="tab-sensitivity",
-                    className="dash-tab",
-                    selected_className="dash-tab--selected"
-                ),
-                dcc.Tab(
-                    label="📊 POR-Analyse",
-                    value="tab-por",
-                    className="dash-tab",
-                    selected_className="dash-tab--selected"
-                )
-            ]
-        )
-    ], className="sticky-tabs"),
+        # --- Sidebar ---
+        html.Div([
+            html.H2("🔍 Navigation", style={"color": "white", "padding": "10px 20px"}),
 
+            html.Div("Allgemein", className="sidebar-category"),
+            dcc.Link("🏠 Projekt", href="/", className="sidebar-link"),
 
-    html.Div(id="main-tab-content", className="main-content")
+            html.Div("Datenquellen", className="sidebar-category"),
+            dcc.Link("🌍 Reanalyse & Energie", href="/data", className="sidebar-link"),
+
+            html.Div("Simulationsergebnisse", className="sidebar-category"),
+            dcc.Link("📈 Zentrale Ergebnisse", href="/core", className="sidebar-link"),
+            dcc.Link("📉 Langzeitanalyse", href="/lt", className="sidebar-link"),
+            dcc.Link("📐 Modellgüte", href="/sensitivity", className="sidebar-link"),
+            dcc.Link("📊 POR", href="/por", className="sidebar-link"),
+
+            html.Div("Glossar", className="sidebar-category"),
+            dcc.Link("📘 Begriffe", href="/glossar", className="sidebar-link")
+        ], className="sidebar"),
+
+        # --- Main Content Area ---
+        html.Div(id="page-content", className="main-content")
+    ], className="layout-container")
 ])
 
 @app.callback(
-    Output("main-tab-content", "children"),
-    Input("main-tabs", "value"),
+    Output("page-content", "children"), 
+    Input("url", "pathname")
 )
-def render_tab_content(selected_tab):
-    if selected_tab == "tab-home":
-        return tab_home_layout
-                   
-    if selected_tab == "tab-data":
+def display_page(pathname):
+    if pathname == "/data":
         return tab_data_layout
-                
-    if selected_tab == "tab-core":
+    elif pathname == "/core":
         return tab_core_layout
-    
-    if selected_tab == "tab-lt":
+    elif pathname == "/lt":
         return tab_lt_layout
-    
-    if selected_tab == "tab-sensitivity":
+    elif pathname == "/sensitivity":
         return tab_sensitivity_layout
-    
-    if selected_tab == "tab-por":
+    elif pathname == "/por":
         return tab_por_layout
+    elif pathname == "/glossar":
+        return html.Div("Glossar-Inhalte hier rein")  # Später ersetzt
+    else:
+        return tab_home_layout  # Startseite
     
 
 @app.callback(

@@ -38,7 +38,7 @@ tab_home_layout = html.Div([
 
     # Optional: Bild oder Logo einfügen
     # html.Img(src="/assets/unilogo.png", style={"width": "160px", "marginTop": "20px"})
-], className="content-wrapper")
+])
 
 
 

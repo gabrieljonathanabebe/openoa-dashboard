@@ -167,7 +167,7 @@ tab_sensitivity_layout = html.Div([
             children=dcc.Graph(id="correlation-matrix"),
         )
     ], className="plot-container")
-], className="content-wrapper")
+])
 
 
 

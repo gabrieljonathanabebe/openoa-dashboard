@@ -41,4 +41,4 @@ tab_core_layout = html.Div([
         ], className="plot-container")  # ← hier anwenden
         
     ], style={"padding":"20px"})
-], className="content-wrapper")
+])
