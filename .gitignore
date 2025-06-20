@@ -192,3 +192,7 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Verhindere Upload von OpenOA-Beispielen und Projekten
+examples/
+scripts/run_simulation.py

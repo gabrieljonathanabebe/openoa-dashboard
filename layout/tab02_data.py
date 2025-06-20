@@ -52,4 +52,4 @@ tab_data_layout = html.Div([
             glattere Verläufe zeigt. Diese strukturellen Unterschiede haben Einfluss auf die Modellgüte
             bei der Langzeitkorrektur von Energieerträgen – ein zentraler Aspekt dieser Analyse.
         """, className="intro-paragraph"),
-])
+], className="content-wrapper")

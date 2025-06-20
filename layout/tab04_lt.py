@@ -100,7 +100,7 @@ tab_lt_layout = html.Div([
             children=dcc.Graph(id="lt-slope-plot")
         )
     ], className="plot-container")
-])
+], className="content-wrapper")
 
 
 

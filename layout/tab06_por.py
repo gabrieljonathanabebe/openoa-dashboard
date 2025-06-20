@@ -61,4 +61,4 @@ tab_por_layout = html.Div([
         "alignItems": "flex-start",
         "marginBottom": "30px"
     })
-])
+], className="content-wrapper")
