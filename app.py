@@ -2,6 +2,7 @@ import dash
 from dash import dcc, html, Output, Input, callback_context, ALL
 
 import datetime
+import os
 
 from layout.tab01_home import tab_home_layout
 from layout.tab02_data import tab_data_layout
@@ -363,8 +364,10 @@ def switch_tab_by_click(n_clicks_list):
     return clicked_id_dict["tab"]
     
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 8050))
+    app.run_server(debug=False, host="0.0.0.0", port=port)
 
 
 
