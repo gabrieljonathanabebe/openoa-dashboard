@@ -51,10 +51,15 @@ app.layout = html.Div([
 
     # --- Sticky Header ---
     html.Div([
-        html.Div("📊 Windpark-Dashboard", style={
+        html.Div([
+            html.I(className="fas fa-chart-bar", style={"marginRight": "8px"}),
+            "Windpark-Dashboard"
+        ], style={
             "fontWeight": "bold",
             "fontSize": "20px",
-            "color": "#EAEAEA"
+            "color": "#EAEAEA",
+            "display": "flex",
+            "alignItems": "center"
         }),
 
         html.Div([
@@ -107,22 +112,37 @@ app.layout = html.Div([
     html.Div([
         # --- Sidebar ---
         html.Div([
-            html.H2("🔍 Navigation", style={"color": "white", "padding": "10px 20px"}),
+            html.Div([
+                html.I(className="fas fa-compass", style={"marginRight": "8px"}),
+                html.Span("Navigation")
+            ], className="sidebar-header"),
 
-            html.Div("Allgemein", className="sidebar-category"),
-            dcc.Link("🏠 Projekt", href="/", className="sidebar-link"),
+            html.Div([
+                html.I(className="fas fa-home", style={"marginRight": "8px"}),
+                html.Span("Allgemein")
+            ], className="sidebar-category"),
+            dcc.Link("Projekt", href="/", className="sidebar-link"),
 
-            html.Div("Datenquellen", className="sidebar-category"),
-            dcc.Link("🌍 Reanalyse & Energie", href="/data", className="sidebar-link"),
+            html.Div([
+                html.I(className="fas fa-database", style={"marginRight": "8px"}),
+                html.Span("Datenquellen")
+            ], className="sidebar-category"),
+            dcc.Link("Reanalyse & Energie", href="/data", className="sidebar-link"),
 
-            html.Div("Simulationsergebnisse", className="sidebar-category"),
-            dcc.Link("📈 Zentrale Ergebnisse", href="/core", className="sidebar-link"),
-            dcc.Link("📉 Langzeitanalyse", href="/lt", className="sidebar-link"),
-            dcc.Link("📐 Modellgüte", href="/sensitivity", className="sidebar-link"),
-            dcc.Link("📊 POR", href="/por", className="sidebar-link"),
+            html.Div([
+                html.I(className="fas fa-chart-line", style={"marginRight": "8px"}),
+                html.Span("Simulationsergebnisse")
+            ], className="sidebar-category"),
+            dcc.Link("Zentrale Ergebnisse", href="/core", className="sidebar-link"),
+            dcc.Link("Langzeitanalyse", href="/lt", className="sidebar-link"),
+            dcc.Link("Modellgüte", href="/sensitivity", className="sidebar-link"),
+            dcc.Link("POR", href="/por", className="sidebar-link"),
 
-            html.Div("Glossar", className="sidebar-category"),
-            dcc.Link("📘 Begriffe", href="/glossar", className="sidebar-link")
+            html.Div([
+                html.I(className="fas fa-book", style={"marginRight": "8px"}),
+                html.Span("Glossar")
+            ], className="sidebar-category"),
+            dcc.Link("Begriffe", href="/glossar", className="sidebar-link")
         ], className="sidebar"),
 
         # --- Main Content Area ---

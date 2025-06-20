@@ -78,7 +78,7 @@ def get_time_series_plot(era5_ts, merra2_ts):
     )
     
     fig.update_layout(
-        height=500,
+        height = 500,
         showlegend=True,
         xaxis=dict(
             title="Jahr",
@@ -193,7 +193,7 @@ def get_aep_compare_plots(stats, dataframes):
         )   
     
     fig.update_layout(
-        height=800,
+        height = 750,
         showlegend=True,
         title=dict(
             text="Unsicherheitsanalyse der AEP",
@@ -300,7 +300,7 @@ def get_aep_analysis_plot(filtered_dfs, metric = "aep_final"):
         )
     #Layouteinstellungen
     fig.update_layout(
-        height=850,
+        height = 750,
         title=dict(
             text="Iterationsspezifische Analyse der AEP",
             x=0.5,
@@ -395,7 +395,7 @@ def get_lt_evolution_plot(dataframes, selected_labels, column="energy"):
         )
     
     fig.update_layout(
-        height=500,
+        height = 500,
         showlegend=False,
         xaxis=dict(title="Jahr"),
         yaxis=dict(title="LT-Energy (GWh/yr)" if column == "energy" else "Average LT-Windspeed (m/s)"),
@@ -499,7 +499,7 @@ def get_slope_energy_plot(left_df, right_df, selected_years, left_label, right_l
     )
     
     fig.update_layout(
-        height=500,
+        height = 500,
         showlegend=False,
         xaxis=dict(title="Slope (GWh/ (m/s))", range=[x_min, x_max]),        
         yaxis=dict(title="LT-Energy (GWh/yr)"),
@@ -558,7 +558,7 @@ def get_model_comparison_plot(df1, df2, metric, label1, label2):
         )
     
     fig.update_layout(
-        height=550,
+        height = 500,
         barmode="overlay",
         violinmode="overlay",
         title=f"Verteilung der Modellgüte: {metric}",
@@ -640,7 +640,7 @@ def get_model_scatter_plot(df1, df2, x_metric, y_metric, z_metric, label1, label
     )
     
     fig.update_layout(
-        height=500,
+        height = 450,
         title= f"Zusammenhang zwischen {x_metric}, {y_metric} und {z_metric}",
         xaxis=dict(title=METRIC_INFO[x_metric]["metric_en"], range=[x_min, x_max]), 
         xaxis2=dict(title=METRIC_INFO[x_metric]["metric_en"], range=[x_min, x_max]),
@@ -745,7 +745,7 @@ def get_por_hist_violin_plot(df1, df2, label1, label2, observed_value, options):
             )
 
     fig.update_layout(
-        height=550,
+        height = 500,
         title=dict(
             text="Verteilung der modellierten Jahresenergie (GPS)",
             x=0.5,
@@ -773,6 +773,9 @@ def get_correlation_matrices(left_df, right_df, title_left, title_right, metrics
 
     corr_left = compute_corr(left_df)
     corr_right = compute_corr(right_df)
+    
+    x_labels = [break_label(METRIC_INFO[m]["metric_en"]) for m in metrics]
+    y_labels = [break_label(METRIC_INFO[m]["metric_en"]) for m in metrics]
 
     fig = make_subplots(
         rows=1,
@@ -791,8 +794,8 @@ def get_correlation_matrices(left_df, right_df, title_left, title_right, metrics
     fig.add_trace(
         go.Heatmap(
             z=corr_left.values,
-            x=[METRIC_INFO[m]["metric_en"] for m in metrics],
-            y=[METRIC_INFO[m]["metric_en"] for m in metrics],
+            x=x_labels,
+            y=y_labels,
             text=[[f"{val:.2f}" for val in row] for row in corr_left.values],
             texttemplate="%{text}",
             **heatmap_kwargs
@@ -804,8 +807,8 @@ def get_correlation_matrices(left_df, right_df, title_left, title_right, metrics
     fig.add_trace(
         go.Heatmap(
             z=corr_right.values,
-            x=[METRIC_INFO[m]["metric_en"] for m in metrics],
-            y=[METRIC_INFO[m]["metric_en"] for m in metrics],
+            x=x_labels,
+            y=y_labels,
             text=[[f"{val:.2f}" for val in row] for row in corr_right.values],
             texttemplate="%{text}",
             **{**heatmap_kwargs, "showscale": False}  # zweite Skala ausblenden
@@ -814,7 +817,7 @@ def get_correlation_matrices(left_df, right_df, title_left, title_right, metrics
     )
 
     fig.update_layout(
-        height=600,
+        height = 500,
         title="Korrelationen zwischen Modellkoeffizienten",
         title_x=0.5
     )
@@ -844,6 +847,13 @@ def apply_dark_mode_colors(fig):
 
     fig.update_layout(**layout_updates)
     return fig
+
+def break_label(text, threshold=10):
+    if len(text) > threshold:
+        return text.replace(" ", "<br>", 1)  # Nur erstes Leerzeichen umbrechen
+    return text
+
+
 
 
 def get_global_axis_range(column, *dfs, padding_factor=0.05):
