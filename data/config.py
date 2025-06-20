@@ -3,8 +3,7 @@ import pandas as pd
 
 
 
-RAW_DIR = "/Users/jonathanabebe/Desktop/Python-Projekte/OpenOA-Dashboard/data/raw"
-
+RAW_DIR = os.path.join("data", "raw")
 # ... Imports und andere Konstanten ...
 
 GROSS_POR_OBSERVED = 12.229
@@ -44,7 +43,7 @@ COLOR_MAP = {
 }
 
 
-LONGTERM_DIR = "/Users/jonathanabebe/Desktop/Python-Projekte/OpenOA-Dashboard/data/processed/longterm"
+LONGTERM_DIR = os.path.join("data", "processed", "longterm")
 
 LONGTERM_FILES = {
     "ERA5": "mc_era5_lt.csv",
