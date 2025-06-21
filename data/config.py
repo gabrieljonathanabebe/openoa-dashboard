@@ -4,6 +4,7 @@ import pandas as pd
 
 
 RAW_DIR = os.path.join("data", "raw")
+PROCESSED_POR_DIR = os.path.join("data", "processed", "por")
 # ... Imports und andere Konstanten ...
 
 GROSS_POR_OBSERVED = 12.229
@@ -31,6 +32,19 @@ TIMESERIES_DATAFRAMES = {
     label: pd.read_csv(os.path.join(RAW_DIR, filename), parse_dates=["Date"])
     for label, filename in TIMESERIES_FILES.items()
     
+}
+
+POR_DATASETS = {
+    "ERA5": "mc_era5_por.csv",
+    "MERRA2": "mc_merra2_por.csv",
+    "Kombiniert": "mc_combined_por.csv",
+    "ERA5 gefiltert": "mc_era5_filtered_por.csv",
+    "MERRA2 gefiltert": "mc_merra2_filtered_por.csv",
+}
+
+POR_DATAFRAMES = {
+    label: pd.read_csv(os.path.join(PROCESSED_POR_DIR, filename))
+    for label, filename in POR_DATASETS.items()
 }
 
 
@@ -199,7 +213,15 @@ METRIC_INFO = {
     "wind": {
         "metric_en": "Average LT-Windspeed (m/s)",
         "metric_de": "Durchschnittliche LT-Windgeschwindigkeit (m/s)"
-    },  
+    },
+    "metered_energy_fraction": {
+    "metric_en": "Metered Energy Correction Factor",
+    "metric_de": "Faktor für Messzählungskorrektur"
+    },
+    "num_points": {
+        "metric_en": "Number of Data Points",
+        "metric_de": "Anzahl der Regressionspunkte"
+    }
 }
 
 

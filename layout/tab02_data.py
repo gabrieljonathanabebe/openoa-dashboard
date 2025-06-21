@@ -37,7 +37,6 @@ tab_data_layout = html.Div([
 
     # Plot
     html.Div([
-        html.H4("Rollierender 12-Monatsmittelwert", className="home-subtitle"),
         dcc.Graph(
             id="line-plot-windspeed",
             figure=get_time_series_plot(*compute_normalized_timeseries()),

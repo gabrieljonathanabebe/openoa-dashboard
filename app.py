@@ -10,6 +10,7 @@ from layout.tab03_core import tab_core_layout
 from layout.tab04_lt import tab_lt_layout
 from layout.tab05_sensitivity import tab_sensitivity_layout
 from layout.tab06_por import tab_por_layout
+from layout.tab07_glossary import tab_glossary_layout
 
 from utils.compute_stats import filter_dataframes_by_labels
 
@@ -20,7 +21,8 @@ from utils.plot_utils import (
     get_model_comparison_plot,
     get_model_scatter_plot,
     get_por_hist_violin_plot,
-    get_correlation_matrices
+    get_correlation_matrices,
+    get_regression_plot
 )
 
 from data.config import (
@@ -29,7 +31,8 @@ from data.config import (
     TAB_KEYWORDS,
     WEEKDAY_MAP,
     MONTH_MAP,
-    GROSS_POR_OBSERVED
+    GROSS_POR_OBSERVED,
+    POR_DATAFRAMES
 )
 
 
@@ -121,34 +124,56 @@ app.layout = html.Div([
                 html.I(className="fas fa-home", style={"marginRight": "8px"}),
                 html.Span("Allgemein")
             ], className="sidebar-category"),
-            dcc.Link("Projekt", href="/", className="sidebar-link"),
+            dcc.Link("Projekt", href="/", id="link-home", className="sidebar-link"),
 
             html.Div([
                 html.I(className="fas fa-database", style={"marginRight": "8px"}),
                 html.Span("Datenquellen")
             ], className="sidebar-category"),
-            dcc.Link("Reanalyse & Energie", href="/data", className="sidebar-link"),
+            dcc.Link("Reanalyse & Energie", href="/data", id="link-data", className="sidebar-link"),
 
             html.Div([
                 html.I(className="fas fa-chart-line", style={"marginRight": "8px"}),
-                html.Span("Simulationsergebnisse")
+                html.Span("Ergebnisse")
             ], className="sidebar-category"),
-            dcc.Link("Zentrale Ergebnisse", href="/core", className="sidebar-link"),
-            dcc.Link("Langzeitanalyse", href="/lt", className="sidebar-link"),
-            dcc.Link("Modellgüte", href="/sensitivity", className="sidebar-link"),
-            dcc.Link("POR", href="/por", className="sidebar-link"),
+            dcc.Link("Zentrale Ergebnisse", href="/core", id="link-core", className="sidebar-link"),
+            dcc.Link("Langzeitanalyse", href="/lt", id="link-lt", className="sidebar-link"),
+            dcc.Link("Modellgüte", href="/sensitivity", id="link-sensitivity", className="sidebar-link"),
+            dcc.Link("POR", href="/por", id="link-por", className="sidebar-link"),
 
             html.Div([
                 html.I(className="fas fa-book", style={"marginRight": "8px"}),
                 html.Span("Glossar")
             ], className="sidebar-category"),
-            dcc.Link("Begriffe", href="/glossar", className="sidebar-link")
+            dcc.Link("Begriffe", href="/glossary", id="link-glossary", className="sidebar-link"),
+            
+            html.Div([
+                html.A(
+                    html.I(className="fab fa-github"), 
+                    href="https://github.com/gabrieljonathanabebe", 
+                    target="_blank", 
+                    className="social-icon"
+                ),
+                html.A(
+                    html.I(className="fab fa-linkedin"), 
+                    href="https://www.linkedin.com/in/gabriel-jonathan-abebe-781b92316/", 
+                    target="_blank", 
+                    className="social-icon"
+                ),
+                html.A(
+                    html.I(className="fas fa-envelope"), 
+                    href="mailto:jonathanabebe@outlook.de", 
+                    className="social-icon"
+                ),
+            ], className="sidebar-social")
         ], className="sidebar"),
 
         # --- Main Content Area ---
         html.Div(id="page-content", className="main-content")
     ], className="layout-container")
 ])
+        
+
 
 @app.callback(
     Output("page-content", "children"), 
@@ -165,10 +190,35 @@ def display_page(pathname):
         return tab_sensitivity_layout
     elif pathname == "/por":
         return tab_por_layout
-    elif pathname == "/glossar":
-        return html.Div("Glossar-Inhalte hier rein")  # Später ersetzt
+    elif pathname == "/glossary":
+        return tab_glossary_layout
     else:
         return tab_home_layout  # Startseite
+    
+
+@app.callback(
+    Output("link-home", "className"),
+    Output("link-data", "className"),
+    Output("link-core", "className"),
+    Output("link-lt", "className"),
+    Output("link-sensitivity", "className"),
+    Output("link-por", "className"),
+    Output("link-glossary", "className"),
+    Input("url", "pathname")
+)
+def highlight_active_link(pathname):
+    def get_class(link_path):
+        return "sidebar-link selected" if pathname == link_path else "sidebar-link"
+
+    return (
+        get_class("/"),
+        get_class("/data"),
+        get_class("/core"),
+        get_class("/lt"),
+        get_class("/sensitivity"),
+        get_class("/por"),
+        get_class("/glossary")
+    )
     
 
 @app.callback(
@@ -261,6 +311,22 @@ def update_correlation_matrix(left_label, right_label):
     return fig
 
 
+
+@app.callback(
+    Output("reg-scatter", "figure"),
+    Input("reg-scatter-label-dropdown-1", "value"),
+    Input("reg-scatter-label-dropdown-2", "value"),
+    Input("por-metric-dropdown", "value"),
+    Input("por-metric-value-dropdown", "value"),
+)
+def update_regression_plot(label1, label2, reg_metric, metric_value):
+    df1 = POR_DATAFRAMES[label1]
+    df2 = POR_DATAFRAMES[label2]
+
+    fig = get_regression_plot(df1, df2, reg_metric, metric_value, label1, label2)
+    return fig
+
+
 @app.callback(
     Output("current-time", "children"),
     Input("clock-interval", "n_intervals")
@@ -349,7 +415,7 @@ def switch_tab_by_click(n_clicks_list):
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8051))
-    app.run(debug=False, host="0.0.0.0", port=port)
+    app.run(debug=True, host="0.0.0.0", port=port)
 
 
 

@@ -60,6 +60,33 @@ def filter_lt_data(df, selected_years):
 
 
 
+def get_iteration(df, metric, method="max"):  
+    if df.empty or metric not in df.columns:
+        raise ValueError("Ungültige Dataframes oder Metrik nicht gefunden.")
+        
+    method = method.lower()
+    
+    if method == "max":
+        target_value = df[metric].max()
+    elif method == "min":
+        target_value = df[metric].min()
+    elif method == "median":
+        target_value = df[metric].median()
+    elif method == "q1":
+        target_value = df[metric].quantile(0.25)
+    elif method == "q3":
+        target_value = df[metric].quantile(0.75)
+    else:
+        raise ValueError(f"Unbekannte Methode: {method}")
+    
+    # Finde den Index der Zeile, bei der der Wert dem Zielwert am nächsten ist
+    closest_index = (df[metric] - target_value).abs().idxmin()
+
+    return df.loc[closest_index, "iteration"]
+        
+    
+
+
 
 def compute_mean(values):
     return np.mean(values)

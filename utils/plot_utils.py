@@ -4,7 +4,12 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from utils.compute_stats import compute_mean, compute_lt_metrics, filter_lt_data
+from utils.compute_stats import (
+    compute_mean, 
+    compute_lt_metrics, 
+    filter_lt_data,
+    get_iteration
+)
 
 from data.config import COLOR_MAP, METRIC_INFO
 
@@ -80,6 +85,11 @@ def get_time_series_plot(era5_ts, merra2_ts):
     fig.update_layout(
         height = 500,
         showlegend=True,
+        title=dict(
+            text="Rollierender 12-Monatsmittelwert",
+            x=0.5,
+            font=dict(size=16)
+        ),
         xaxis=dict(
             title="Jahr",
             rangeslider=dict(visible=True),
@@ -110,7 +120,7 @@ def get_aep_compare_plots(stats, dataframes):
             "Mittelwert", "Unsicherheit(CV)", "Boxplots",
             "Jitterplot", "Violinplots"
         ],
-        vertical_spacing=0.15,
+        vertical_spacing=0.1,
         row_heights=[0.45, 0.55],
         column_widths=[0.25, 0.25, 0.5]
     )    
@@ -196,9 +206,9 @@ def get_aep_compare_plots(stats, dataframes):
         height = 750,
         showlegend=True,
         title=dict(
-            text="Unsicherheitsanalyse der AEP",
+            text="Iterationsspezifische Analyse der AEP",
             x=0.5,
-            font=dict(size=20)
+            font=dict(size=16)
         ),
         legend=dict(
             orientation="h",
@@ -232,7 +242,6 @@ def get_aep_analysis_plot(filtered_dfs, metric = "aep_final"):
     fig = make_subplots(
         rows=2, cols=2,
         specs=[[{}, {}], [{"colspan":2}, None]],
-        subplot_titles=["Histogramm", "AEP vs. IAV-Faktor", "AEP je Iteration"],
         vertical_spacing=0.1,
         row_heights=[0.5, 0.5]        
     )
@@ -304,7 +313,7 @@ def get_aep_analysis_plot(filtered_dfs, metric = "aep_final"):
         title=dict(
             text="Iterationsspezifische Analyse der AEP",
             x=0.5,
-            font=dict(size=20)
+            font=dict(size=16)
         ),
         legend=dict(
             orientation="h",
@@ -561,7 +570,11 @@ def get_model_comparison_plot(df1, df2, metric, label1, label2):
         height = 500,
         barmode="overlay",
         violinmode="overlay",
-        title=f"Verteilung der Modellgüte: {metric}",
+        title=dict(
+            text=f"Verteilung der Modellgüte: {METRIC_INFO[metric]['metric_en']}",
+            x=0.5,
+            font=dict(size=16)
+        ),
         legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"),
         xaxis=dict(title=METRIC_INFO[metric]["metric_en"]),
         yaxis=dict(title="Frequency"),
@@ -629,7 +642,7 @@ def get_model_scatter_plot(df1, df2, x_metric, y_metric, z_metric, label1, label
                 showscale=True,
                 colorbar=dict(
                     title=dict(
-                        text=z_metric,
+                        text=f"{METRIC_INFO[z_metric]['metric_en']}",
                         side="right"
                     )
                 ),
@@ -641,7 +654,11 @@ def get_model_scatter_plot(df1, df2, x_metric, y_metric, z_metric, label1, label
     
     fig.update_layout(
         height = 450,
-        title= f"Zusammenhang zwischen {x_metric}, {y_metric} und {z_metric}",
+        title=dict(
+            text=f"Zusammenhang zwischen {METRIC_INFO[x_metric]['metric_en']}, {METRIC_INFO[y_metric]['metric_en']} und {METRIC_INFO[z_metric]['metric_en']}",
+            x=0.5,
+            font=dict(size=16)
+        ),
         xaxis=dict(title=METRIC_INFO[x_metric]["metric_en"], range=[x_min, x_max]), 
         xaxis2=dict(title=METRIC_INFO[x_metric]["metric_en"], range=[x_min, x_max]),
         yaxis=dict(title=METRIC_INFO[y_metric]["metric_en"], range=[y_min, y_max]),
@@ -749,7 +766,7 @@ def get_por_hist_violin_plot(df1, df2, label1, label2, observed_value, options):
         title=dict(
             text="Verteilung der modellierten Jahresenergie (GPS)",
             x=0.5,
-            font=dict(size=20)
+            font=dict(size=16)
         ),
         barmode="overlay",
         violinmode="overlay",
@@ -819,13 +836,148 @@ def get_correlation_matrices(left_df, right_df, title_left, title_right, metrics
     fig.update_layout(
         height = 500,
         title="Korrelationen zwischen Modellkoeffizienten",
-        title_x=0.5
+        title_x=0.5,
     )
     
     fig.update_yaxes(showticklabels=False, row=1, col=2)
 
     apply_dark_mode_colors(fig)
     return fig
+
+
+
+# Regressionsplot
+def get_regression_plot(df1, df2, metric, value, label1, label2):
+    # Hilfsfunktion für Punkte
+    def add_trace(fig, df, source, color, symbol, name, row=1, col=1, showlegend=True):
+        filtered = df[df["source"] == source]
+        fig.add_trace(
+            go.Scatter(
+                x=filtered["wind_speed"],
+                y=filtered["energy"],
+                mode="markers",
+                marker=dict(color=color, symbol=symbol, size=7),
+                name=name,
+                showlegend=showlegend
+            ),
+            row=row, col=col
+        )
+
+    # Iterationen bestimmen
+    iter1 = get_iteration(df1, metric, method=value)
+    iter2 = get_iteration(df2, metric, method=value)
+
+    df1_filtered = df1[df1["iteration"] == iter1]
+    df2_filtered = df2[df2["iteration"] == iter2]
+
+    # Axis-Limits
+    x_min, x_max = get_global_axis_range("wind_speed", df1_filtered, df2_filtered)
+    y_min, y_max = get_global_axis_range("energy", df1_filtered, df2_filtered)
+
+    # Plot initialisieren
+    fig = make_subplots(rows=1, cols=2, subplot_titles=[label1, label2], horizontal_spacing=0.05)
+
+    # Scatterpunkte & Regressionslinie – links
+    add_trace(fig, df1_filtered, "bootstrap", "green", "circle", "Bootstrap", col=1, showlegend=True)
+    add_trace(fig, df1_filtered, "non-bootstrap", "red", "x", "Non-Bootstrap", col=1, showlegend=True)
+
+    slope1 = df1_filtered["slope"].iloc[0]
+    intercept1 = df1_filtered["intercept"].iloc[0]
+    x_vals1 = np.linspace(x_min, x_max, 100)
+    y_vals1 = slope1 * x_vals1 + intercept1
+
+    fig.add_trace(
+        go.Scatter(
+            x=x_vals1,
+            y=y_vals1,
+            mode="lines",
+            line=dict(color="green", dash="dash"),
+            name="",  # wichtig!
+            showlegend=False
+        ),
+        row=1, col=1
+    )
+
+    # Scatterpunkte & Regressionslinie – rechts
+    add_trace(fig, df2_filtered, "bootstrap", "green", "circle", "Bootstrap", col=2, showlegend=False)
+    add_trace(fig, df2_filtered, "non-bootstrap", "red", "x", "Non-Bootstrap", col=2, showlegend=False)
+
+    slope2 = df2_filtered["slope"].iloc[0]
+    intercept2 = df2_filtered["intercept"].iloc[0]
+    x_vals2 = np.linspace(x_min, x_max, 100)
+    y_vals2 = slope2 * x_vals2 + intercept2
+
+    fig.add_trace(
+        go.Scatter(
+            x=x_vals2,
+            y=y_vals2,
+            mode="lines",
+            line=dict(color="green", dash="dash"),
+            name="",
+            showlegend=False
+        ),
+        row=1, col=2
+    )
+
+    # Annotations für Metriken
+    metrics1 = f"y = {slope1:.3f}x {intercept1:.2f}<br>" \
+               f"R² = {df1_filtered['r2'].iloc[0]:.2f}<br>" \
+               f"MSE = {df1_filtered['mse'].iloc[0]:.3f}<br>" \
+               f"Bias = {df1_filtered['yearly_bias'].iloc[0]:.3f}"
+
+    metrics2 = f"y = {slope2:.3f}x {intercept2:.2f}<br>" \
+               f"R² = {df2_filtered['r2'].iloc[0]:.2f}<br>" \
+               f"MSE = {df2_filtered['mse'].iloc[0]:.3f}<br>" \
+               f"Bias = {df2_filtered['yearly_bias'].iloc[0]:.3f}"
+
+
+    fig.add_annotation(
+        text=metrics1,
+        xref="paper", yref="paper",
+        x=0.02, y=0.95,
+        showarrow=False,
+        align="left",
+        font=dict(color="white", size=12),
+        bgcolor="rgba(0,0,0,0)"
+    )
+
+    fig.add_annotation(
+        text=metrics2,
+        xref="paper", yref="paper",
+        x=0.60, y=0.95,
+        showarrow=False,
+        align="left",
+        font=dict(color="white", size=12),
+        bgcolor="rgba(0,0,0,0)"
+    )
+
+    # Layout
+    fig.update_layout(
+        height=450,
+        title=dict(
+            text="Regressionplots einer ausgewählten Iteration",
+            x=0.5,
+            font=dict(size=16)
+        ),
+        xaxis=dict(title="POR-Windspeed (m/s)"),
+        yaxis=dict(title="POR-Gross-Energy (GWh/m)"),
+        xaxis2=dict(title="POR-Windspeed (m/s)"),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.3,
+            xanchor="center",
+            x=0.5
+        )
+    )
+
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='gray', mirror=True, range=[x_min, x_max])
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='gray', mirror=True, range=[y_min, y_max])
+
+    apply_dark_mode_colors(fig)
+    return fig
+    
+    
         
 
 def apply_dark_mode_colors(fig):
@@ -848,14 +1000,6 @@ def apply_dark_mode_colors(fig):
     fig.update_layout(**layout_updates)
     return fig
 
-def break_label(text, threshold=10):
-    if len(text) > threshold:
-        return text.replace(" ", "<br>", 1)  # Nur erstes Leerzeichen umbrechen
-    return text
-
-
-
-
 def get_global_axis_range(column, *dfs, padding_factor=0.05):
     all_values = pd.concat([df[column] for df in dfs])
     min_val = all_values.min()
@@ -870,6 +1014,13 @@ def get_global_axis_range(column, *dfs, padding_factor=0.05):
 def get_global_color_scale_bounds(column, *dfs):
     all_values = pd.concat([df[column] for df in dfs])
     return all_values.min(), all_values.max()
+
+
+def break_label(text, threshold=10):
+    if len(text) > threshold:
+        return text.replace(" ", "<br>", 1)  # Nur erstes Leerzeichen umbrechen
+    return text
+
 
 
 

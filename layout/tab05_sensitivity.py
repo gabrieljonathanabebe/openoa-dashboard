@@ -39,7 +39,7 @@ tab_sensitivity_layout = html.Div([
                     {"label":"Bestimmtheitsmaß (R²)", "value":"r2"},
                     {"label":"Mean Squared Error (MSE)", "value":"mse"}
                 ],
-                value="slope",
+                value="r2",
                 clearable=False
             ),
 
@@ -59,7 +59,7 @@ tab_sensitivity_layout = html.Div([
             dcc.Dropdown(
                 id="label-2-dropdown",
                 options=[{"label": label, "value": label} for label in DATAFRAMES.keys()],
-                value="ERA5 gefiltert",
+                value="MERRA2",
                 clearable=False,
             ),
         ], style={"flex": "1"}, className="sidebar-dropdown-group"),
@@ -99,7 +99,7 @@ tab_sensitivity_layout = html.Div([
                 options=[
                     {"label": info["metric_en"], "value": key} for key, info in METRIC_INFO.items()
                 ],
-                value="intercept",
+                value="mse",
                 clearable=False
             ),
             
@@ -111,7 +111,7 @@ tab_sensitivity_layout = html.Div([
                 options=[
                     {"label": info["metric_en"], "value": key} for key, info in METRIC_INFO.items()
                 ],
-                value="slope",
+                value="r2",
                 clearable=False
             ),
             
@@ -123,7 +123,7 @@ tab_sensitivity_layout = html.Div([
                 options=[
                     {"label": info["metric_en"], "value": key} for key, info in METRIC_INFO.items()
                 ],
-                value="r2",
+                value="slope",
                 clearable=False
             )
             
