@@ -5,6 +5,7 @@ import pandas as pd
 
 RAW_DIR = os.path.join("data", "raw")
 PROCESSED_POR_DIR = os.path.join("data", "processed", "por")
+PROCESSED_SCATTER_DIR = os.path.join("data", "processed", "scatter")
 # ... Imports und andere Konstanten ...
 
 GROSS_POR_OBSERVED = 12.229
@@ -34,17 +35,30 @@ TIMESERIES_DATAFRAMES = {
     
 }
 
+# Zeitreihen (für Zeitverlaufsplot)
 POR_DATASETS = {
     "ERA5": "mc_era5_por.csv",
     "MERRA2": "mc_merra2_por.csv",
-    "Kombiniert": "mc_combined_por.csv",
-    "ERA5 gefiltert": "mc_era5_filtered_por.csv",
-    "MERRA2 gefiltert": "mc_merra2_filtered_por.csv",
+    "ERA5 gefiltert": "mc_era5_gefiltert_por.csv",
+    "MERRA2 gefiltert": "mc_merra2_gefiltert_por.csv",
 }
 
 POR_DATAFRAMES = {
-    label: pd.read_csv(os.path.join(PROCESSED_POR_DIR, filename))
+    label: pd.read_csv(os.path.join(PROCESSED_POR_DIR, filename), parse_dates=["time"])
     for label, filename in POR_DATASETS.items()
+}
+
+# Scatterplot-Daten (für Regressionsplot)
+POR_SCATTERSETS = {
+    "ERA5": "mc_era5_scatter.csv",
+    "MERRA2": "mc_merra2_scatter.csv",
+    "ERA5 gefiltert": "mc_era5_gefiltert_scatter.csv",
+    "MERRA2 gefiltert": "mc_merra2_gefiltert_scatter.csv",
+}
+
+POR_SCATTERFRAMES = {
+    label: pd.read_csv(os.path.join(PROCESSED_SCATTER_DIR, filename), parse_dates=["time"])
+    for label, filename in POR_SCATTERSETS.items()
 }
 
 

@@ -206,14 +206,14 @@ def get_aep_compare_plots(stats, dataframes):
         height = 750,
         showlegend=True,
         title=dict(
-            text="Iterationsspezifische Analyse der AEP",
+            text="Prognosebandbreite der AEP",
             x=0.5,
             font=dict(size=16)
         ),
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=-0.2,
+            y=-0.1,
             xanchor="center",
             x=0.5,
             title=dict(text=None),  # <- KEIN 'x' hier
@@ -318,7 +318,7 @@ def get_aep_analysis_plot(filtered_dfs, metric = "aep_final"):
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=-0.25,
+            y=-0.15,
             xanchor="center",
             x=0.5,
             title=None,
@@ -342,8 +342,8 @@ def get_aep_analysis_plot(filtered_dfs, metric = "aep_final"):
 
 
 def get_lt_evolution_plot(dataframes, selected_labels, column="energy"):
-    title_left = "Entwicklung LT-Bruttoenergie" if column == "energy" else "Entwicklung LT-Wind"
-    title_right = "Entwicklung IAV-Energie" if column == "energy" else "Entwicklung IAV-Wind"
+    title_left = "LT-Bruttoenergie" if column == "energy" else "LT-Wind"
+    title_right = "IAV-Energie" if column == "energy" else "IAV-Wind"
     
     fig = make_subplots(
         rows=1,
@@ -405,6 +405,11 @@ def get_lt_evolution_plot(dataframes, selected_labels, column="energy"):
     
     fig.update_layout(
         height = 500,
+        title=dict(
+            text="LT-Entwicklung",
+            x=0.5,
+            font=dict(size=16)
+        ),
         showlegend=False,
         xaxis=dict(title="Jahr"),
         yaxis=dict(title="LT-Energy (GWh/yr)" if column == "energy" else "Average LT-Windspeed (m/s)"),
@@ -509,6 +514,11 @@ def get_slope_energy_plot(left_df, right_df, selected_years, left_label, right_l
     
     fig.update_layout(
         height = 500,
+        title=dict(
+            text="Einfluss der Steigung auf die LT-Energie in Abhängigkeit der Windressourcen",
+            x=0.5,
+            font=dict(size=16)
+        ),
         showlegend=False,
         xaxis=dict(title="Slope (GWh/ (m/s))", range=[x_min, x_max]),        
         yaxis=dict(title="LT-Energy (GWh/yr)"),
@@ -965,7 +975,7 @@ def get_regression_plot(df1, df2, metric, value, label1, label2):
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=-0.3,
+            y=-0.2,
             xanchor="center",
             x=0.5
         )
@@ -973,6 +983,67 @@ def get_regression_plot(df1, df2, metric, value, label1, label2):
 
     fig.update_xaxes(showline=True, linewidth=2, linecolor='gray', mirror=True, range=[x_min, x_max])
     fig.update_yaxes(showline=True, linewidth=2, linecolor='gray', mirror=True, range=[y_min, y_max])
+
+    apply_dark_mode_colors(fig)
+    return fig
+
+
+
+def get_por_timeseries_plot(df_dict, selected_labels, metric="r2", method="max"):
+    fig = go.Figure()
+
+    for label in selected_labels:
+        df_label = df_dict[label]  # <-- hier wird's richtig gemacht
+
+        # Beste Iteration finden
+        best_iter = get_iteration(df_label, metric, method)
+        df_iter = df_label[df_label["iteration"] == best_iter].copy().sort_values("time")
+
+        fig.add_trace(go.Scatter(
+            x=df_iter["time"],
+            y=df_iter["pred_energy"],
+            mode="lines+markers",
+            name=f"{label} (modelliert)",
+            line=dict(color=COLOR_MAP.get(label, "gray"), width=2),
+            marker=dict(size=6)
+        ))
+
+    # Referenzlinie (nur einmal)
+    any_df = list(df_dict.values())[0]
+    ref = (
+        any_df.groupby("time", as_index=False)["gross_energy_gwh"]
+        .first()
+        .sort_values("time")
+    )
+
+    fig.add_trace(go.Scatter(
+        x=ref["time"],
+        y=ref["gross_energy_gwh"],
+        mode="lines+markers",
+        name="Beobachtete Energie (Referenz)",
+        line=dict(color="white", width=2, dash="dot"),
+        marker=dict(size=6)
+    ))
+
+    fig.update_layout(
+        title=dict(
+            text="Zeitreihe der modellierten monatlichen Energie im POR-Zeitraum",
+            x=0.5,
+            font=dict(size=16)
+        ),
+        height=450,
+        xaxis=dict(
+            title="Monat",
+            rangeslider=dict(visible=True),
+            type="date"  # optional, sorgt für saubere Achsen-Skalierung
+        ),
+        yaxis_title="Energie (GWh)",
+        legend=dict(orientation="h", y=-0.3, x=0.5, xanchor="center")
+    )
+    
+
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='gray', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='gray', mirror=True)
 
     apply_dark_mode_colors(fig)
     return fig

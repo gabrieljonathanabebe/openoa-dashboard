@@ -22,7 +22,8 @@ from utils.plot_utils import (
     get_model_scatter_plot,
     get_por_hist_violin_plot,
     get_correlation_matrices,
-    get_regression_plot
+    get_regression_plot,
+    get_por_timeseries_plot
 )
 
 from data.config import (
@@ -32,6 +33,7 @@ from data.config import (
     WEEKDAY_MAP,
     MONTH_MAP,
     GROSS_POR_OBSERVED,
+    POR_SCATTERFRAMES,
     POR_DATAFRAMES
 )
 
@@ -320,11 +322,21 @@ def update_correlation_matrix(left_label, right_label):
     Input("por-metric-value-dropdown", "value"),
 )
 def update_regression_plot(label1, label2, reg_metric, metric_value):
-    df1 = POR_DATAFRAMES[label1]
-    df2 = POR_DATAFRAMES[label2]
+    df1 = POR_SCATTERFRAMES[label1]
+    df2 = POR_SCATTERFRAMES[label2]
 
     fig = get_regression_plot(df1, df2, reg_metric, metric_value, label1, label2)
     return fig
+
+
+@app.callback(
+    Output("timeseries-energy-plot", "figure"),
+    Input("timeseries-labels-dropdown", "value"),
+    Input("timeseries-metric-dropdown", "value"),
+    Input("timeseries-metric-method-dropdown", "value")
+)
+def update_por_timeseries(selected_labels, metric, method):
+    return get_por_timeseries_plot(POR_DATAFRAMES, selected_labels, metric=metric, method=method)
 
 
 @app.callback(
