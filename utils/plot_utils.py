@@ -1038,7 +1038,7 @@ def get_por_timeseries_plot(df_dict, selected_labels, metric="r2", method="max")
             type="date"  # optional, sorgt für saubere Achsen-Skalierung
         ),
         yaxis_title="Energie (GWh)",
-        legend=dict(orientation="h", y=-0.3, x=0.5, xanchor="center")
+        legend=dict(orientation="h", y=-0.8, x=0.5, xanchor="center")
     )
     
 
