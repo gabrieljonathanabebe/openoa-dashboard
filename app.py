@@ -171,7 +171,9 @@ app.layout = html.Div([
         ], className="sidebar"),
 
         # --- Main Content Area ---
-        html.Div(id="page-content", className="main-content")
+        html.Div([
+            html.Div(id="page-content", className="main-content")
+        ], className="scroll-wrapper")
     ], className="layout-container")
 ])
         
