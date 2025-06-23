@@ -25,7 +25,7 @@ tab_lt_layout = html.Div([
         Auf der rechten Seite wird die Entwicklung der interannuellen Variabilität (IAV) dargestellt. 
         Über Dropdown-Menüs lassen sich verschiedene Monte-Carlo-Analysen auswählen sowie optional 
         zwischen Energie- und Winddaten umschalten.
-    """, className="home-paragraph"),
+    """, className="home-paragraph mb-40"),
 
     # Dropdowns (Seite an Seite)
     html.Div([
@@ -71,13 +71,13 @@ tab_lt_layout = html.Div([
     ], className="plot-container"),
 
     # Untertitel & Erklärung zum zweiten Plot
-    html.H3("Energie vs. Regressionssteigung", className="home-subtitle"),
+    html.H3("Energie vs. Regressionssteigung", className="home-subtitle mt-40"),
     html.P([
         """In diesem Scatterplot-Vergleich können zwei Monte-Carlo-Analysen visuell gegenübergestellt werden.
         Die y-Achse zeigt die vorhergesagte jährliche Energie, die x-Achse die berechnete Regressionssteigung.
         Die Farbskala kodiert die durchschnittliche Windgeschwindigkeit im jeweiligen Jahr."""
     ], className="home-paragraph"),
-    html.P("Über das Dropdown-Feld lassen sich bestimmte Jahre gezielt auswählen.", className="home-paragraph"),
+    html.P("Über das Dropdown-Feld lassen sich bestimmte Jahre gezielt auswählen.", className="home-paragraph mb-40"),
 
     # Dropdown zur Auswahl der Jahre
     html.Div([

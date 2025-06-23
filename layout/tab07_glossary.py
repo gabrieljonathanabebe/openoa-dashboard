@@ -95,4 +95,4 @@ tab_glossary_layout = html.Div([
         finden sich in der zugehörigen Bachelorarbeit. Dieses Glossar bietet lediglich eine kompakte Übersicht 
         der wichtigsten Elemente zur Orientierung innerhalb der Anwendung.
     """, className="home-paragraph")
-])
+], className="main-content")

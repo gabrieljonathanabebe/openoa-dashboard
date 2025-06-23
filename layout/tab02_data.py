@@ -33,7 +33,7 @@ tab_data_layout = html.Div([
         eignet sich insbesondere für die Analyse hochfrequenter Windvariationen. MERRA-2 hingegen
         liefert robustere Langzeittrends, zeigt jedoch eine stärkere Glättung kurzfristiger Schwankungen.
         Diese Unterschiede beeinflussen die Langzeitprognose signifikant.
-    """, className="home-paragraph"),
+    """, className="home-paragraph mb-40"),
 
     # Plot
     html.Div([
@@ -47,7 +47,7 @@ tab_data_layout = html.Div([
         Die obige Grafik zeigt den rollierenden 12-Monats-Mittelwert der normalisierten Windgeschwindigkeit
         für beide Reanalyse-Datensätze über einen Zeitraum von 20 Jahren. Die Linien wurden jeweils
         auf einen Mittelwert von 1 normalisiert, um relative Schwankungen besser vergleichbar zu machen.
-    """, className="home-paragraph"),
+    """, className="home-paragraph mt-40"),
     html.P("""
         Auffällig ist, dass ERA5 stärker auf kurzfristige Windschwankungen reagiert, während MERRA-2
         glattere Verläufe zeigt. Diese strukturellen Unterschiede haben Einfluss auf die Modellgüte

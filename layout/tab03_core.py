@@ -21,7 +21,7 @@ tab_core_layout = html.Div([
         und Violinplots Einblick in die Verteilung der AEP-Prognosen – inklusive Ausreißer und Streuung. 
         So lässt sich die Sensitivität der AEP-Ergebnisse gegenüber Datengrundlage und Filtereinsatz 
         anschaulich bewerten.
-    """, className="home-paragraph"),
+    """, className="home-paragraph mb-40"),
 
     html.Div([
         dcc.Graph(
@@ -30,15 +30,15 @@ tab_core_layout = html.Div([
         )
     ], className="plot-container"),
 
-    html.H3("Iterationsspezifische Analyse", className="home-subtitle"),
+    html.H3("Iterationsspezifische Analyse", className="home-subtitle mt-40"),
     html.P("Die folgende Analyse zeigt für jede ausgewählte MC-Simulation:", className="home-paragraph"),
     html.Ul([
         html.Li("Die Verteilung der AEP über alle Iterationen (Histogramm)"),
         html.Li("Die Beziehung zwischen AEP und dem gesampelten IAV-Faktor (Scatter)"),
         html.Li("Den iterativen Verlauf der Prognose mit gleitendem Mittelwert (Linienplot, Fenstergröße 50)")
-    ], style={"marginLeft": "20px", "marginBottom": "15px", "lineHeight": "1.6", "color": "#DDDDDD", "fontSize": "16px"}),
+    ], style={"marginLeft": "20px", "marginBottom": "15px", "lineHeight": "1.6", "fontSize": "16px"}),
     
-    html.P("Durch Auswahl mehrerer Analysen im Dropdown können diese direkt überlagert und visuell verglichen werden.", className="home-paragraph"),
+    html.P("Durch Auswahl mehrerer Analysen im Dropdown können diese direkt überlagert und visuell verglichen werden.", className="home-paragraph mb-40"),
 
     html.Div([
         dcc.Dropdown(

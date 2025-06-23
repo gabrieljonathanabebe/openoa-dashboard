@@ -2,6 +2,7 @@ from dash import dcc, html
 from data.config import DATAFRAMES, METRIC_INFO
 
 tab_sensitivity_layout = html.Div([
+    
 
     # Titel mit passendem Icon (Regression/Analyse)
     html.H2([
@@ -23,7 +24,7 @@ tab_sensitivity_layout = html.Div([
         Wähle oben gezielt einen Regressionsparameter aus – etwa die Steigung oder das Bestimmtheitsmaß R² – 
         und vergleiche anschließend zwei Monte-Carlo-Analysen miteinander. Die Histogramm-Darstellung links zeigt die Verteilung, 
         während der asymmetrische Violinplot rechts zusätzlich die Dichteverteilung und Einzelsimulationen visualisiert.
-    """, className="home-paragraph"),
+    """, className="home-paragraph mb-40"),
 
     # Dropdowns und Grafik
     html.Div([
@@ -75,7 +76,7 @@ tab_sensitivity_layout = html.Div([
         ], style={"flex": "5"}, className="plot-container")
     ], className="centered-flex-row"),
     
-    html.H3("Beziehungen der Modellparameter", className="home-subtitle"),
+    html.H3("Beziehungen der Modellparameter", className="home-subtitle mt-40"),
 
     html.P("""
         In dieser interaktiven Analyse lassen sich je zwei Modellparameter auf der X- und Y-Achse vergleichen. 
@@ -88,7 +89,7 @@ tab_sensitivity_layout = html.Div([
         Besonders spannend ist der Vergleich zwischen zwei MC-Analysen: So lässt sich untersuchen, ob sich Regressionsparameter 
         (z. B. Steigung oder Achsenabschnitt) systematisch auf Langzeitkennzahlen auswirken – oder ob bestimmte Filter (etwa die 
         Huber-Regression) strukturelle Unterschiede im Modellverhalten erzeugen.
-    """, className="home-paragraph"),
+    """, className="home-paragraph mb-40"),
     
     html.Div([
         html.Div([
@@ -168,7 +169,7 @@ tab_sensitivity_layout = html.Div([
         ], style={"flex": "5"})
     ], className="centered-flex-row"),
     
-    html.H3("Korrelationsmatrix der Modellmetriken", className="home-subtitle"),
+    html.H3("Korrelationsmatrix der Modellmetriken", className="home-subtitle mt-40"),
 
     html.P("""
         Die nachfolgenden Heatmaps zeigen kompakt, wie stark verschiedene Modellmetriken miteinander korrelieren. 
@@ -180,7 +181,7 @@ tab_sensitivity_layout = html.Div([
         Ein direkter Vergleich zweier Monte-Carlo-Analysen erlaubt Rückschlüsse darauf, ob sich bestimmte Zusammenhänge 
         (z. B. zwischen IAV und Regressionssteigung) nur auf spezifische Datensätze beschränken – oder systematisch in 
         allen Simulationen auftreten.
-    """, className="home-paragraph"),
+    """, className="home-paragraph mb-40"),
     
     html.Div([
         html.Div([
@@ -208,7 +209,7 @@ tab_sensitivity_layout = html.Div([
             children=dcc.Graph(id="correlation-matrix"),
         )
     ], className="plot-container")
-])
+], className="main-content")
 
 
 

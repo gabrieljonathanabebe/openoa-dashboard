@@ -34,7 +34,7 @@ tab_por_layout = html.Div([
                 Die tatsächliche, gemessene Energie der Windparkdaten im POR-Zeitraum (als gestrichelte Linie) sowie 
                 die Mittelwerte der simulierten Verteilungen – um etwaige systematische Abweichungen und potenzielle 
                 Modell-Biases frühzeitig sichtbar zu machen.
-            """, className="home-paragraph")
+            """, className="home-paragraph mb-40")
         ]),  # du kannst hier marginBottom per CSS definieren
     
         # Plot + Dropdowns nebeneinander
@@ -89,7 +89,7 @@ tab_por_layout = html.Div([
     
     html.Div([        
         html.Div([                            
-            html.H3("Regressionsbasierte Modellanalyse nach Iteration", className="home-subtitle"),
+            html.H3("Regressionsbasierte Modellanalyse nach Iteration", className="home-subtitle mt-40"),
         
             html.P("""
                 Dieser Abschnitt erlaubt eine gezielte Untersuchung einzelner Modelliterationsergebnisse auf Basis verschiedener 
@@ -102,7 +102,7 @@ tab_por_layout = html.Div([
                 dar. Die gestrichelte Regressionslinie beschreibt das zugrundeliegende lineare Modell der jeweiligen Iteration. 
                 Über den Diagrammen werden ergänzende Metriken angezeigt, darunter das Bestimmtheitsmaß R², der mittlere quadratische Fehler (MSE) 
                 sowie der geschätzte jährliche Modellbias.
-            """, className="home-paragraph"),
+            """, className="home-paragraph mb-40"),
             
         ]),
                    
@@ -180,7 +180,7 @@ tab_por_layout = html.Div([
                 und welche Datenpunkte maßgeblich zum Modellverhalten beitragen. Die Visualisierung unterstützt insbesondere beim 
                 Vergleich unterschiedlicher Reanalyseprodukte oder beim Erkennen systematischer Abweichungen zwischen Trainings- 
                 und Testdaten.
-            """, className="home-paragraph"),
+            """, className="home-paragraph mt-40"),
         ])
      ]),
     
@@ -200,7 +200,7 @@ tab_por_layout = html.Div([
                 Es lassen sich mehrere MC-Analysen gleichzeitig auswählen, um Unterschiede im zeitlichen Verlauf visuell zu erfassen. 
                 Ergänzend dient die weiße Kurve als Referenzlinie und zeigt die tatsächliche gemessene Energie der Windparkdaten
                 für die jeweiligen Monate im POR-Zeitraum.
-            """, className="home-paragraph"),
+            """, className="home-paragraph mb-40"),
         ]),
     
         # Flex-Zeile mit Dropdowns + Plot
@@ -257,7 +257,7 @@ tab_por_layout = html.Div([
                         children=dcc.Graph(id="timeseries-energy-plot")
                     )
                 ])                    
-            ], style={"flex": "5"}, className="plot-container")
+            ], style={"flex": "7"}, className="plot-container")
 
     
         ], className="centered-flex-row"),
@@ -268,7 +268,7 @@ tab_por_layout = html.Div([
                 Die Visualisierung hilft dabei, saisonale Muster, zeitliche Konsistenzen oder Ausreißer im Energieverlauf besser
                 zu erkennen. Besonders hilfreich ist der Vergleich zwischen verschiedenen Reanalyseprodukten oder
                 Modellkonfigurationen, die sich in ihrer Eignung für bestimmte Zeiträume oder Windparkstandorte unterscheiden können.
-            """, className="home-paragraph")
+            """, className="home-paragraph mt-40")
         ])
     
     ])       

@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, Output, Input, callback_context, ALL
+from dash import dcc, html, Output, Input, callback_context, ALL, State
 
 import datetime
 import os
@@ -53,6 +53,7 @@ app = dash.Dash(
 
 app.layout = html.Div([
     dcc.Location(id="url"),
+    dcc.Store(id="theme-store", storage_type="local", data="dark"),
 
     # --- Sticky Header ---
     html.Div([
@@ -62,7 +63,6 @@ app.layout = html.Div([
         ], style={
             "fontWeight": "bold",
             "fontSize": "20px",
-            "color": "#EAEAEA",
             "display": "flex",
             "alignItems": "center"
         }),
@@ -74,12 +74,9 @@ app.layout = html.Div([
                     placeholder="Suchen...",
                     style={
                         "padding": "10px",
-                        "width": "300px",
+                        "width": "250px",
                         "fontSize": "16px",
                         "borderRadius": "8px",
-                        "backgroundColor": "#1f1f1f",
-                        "color": "#EAEAEA",
-                        "border": "1px solid #444"
                     }
                 ),
                 html.Ul(id="search-suggestions", className="search-suggestions")
@@ -87,31 +84,22 @@ app.layout = html.Div([
 
             html.I(className="fas fa-search", style={
                 "fontSize": "20px",
-                "color": "#EAEAEA",
                 "marginRight": "15px"
             }),
 
-            html.I(className="fas fa-cog", style={
+            html.I(id="theme-toggle", className="fas fa-sun", style={
                 "fontSize": "20px",
-                "color": "#EAEAEA",
                 "marginRight": "15px",
                 "cursor": "pointer"
             }),
 
             html.Div(id="current-time", className="current-time", style={
                 "fontSize": "16px",
-                "color": "#AAA",
                 "minWidth": "110px"
             })
         ], style={"display": "flex", "alignItems": "center"})
-    ], className="sticky-header", style={
-        "display": "flex",
-        "justifyContent": "space-between",
-        "alignItems": "center",
-        "padding": "10px 20px",
-        "backgroundColor": "#2c2c2c",
-        "borderBottom": "1px solid #444"
-    }),
+    ], className="sticky-header"
+    ),
 
     # --- Content Wrapper: Sidebar + Main Content ---
     html.Div([
@@ -141,7 +129,7 @@ app.layout = html.Div([
             dcc.Link("Zentrale Ergebnisse", href="/core", id="link-core", className="sidebar-link"),
             dcc.Link("Langzeitanalyse", href="/lt", id="link-lt", className="sidebar-link"),
             dcc.Link("Modellgüte", href="/sensitivity", id="link-sensitivity", className="sidebar-link"),
-            dcc.Link("POR", href="/por", id="link-por", className="sidebar-link"),
+            dcc.Link("POR-Analyse", href="/por", id="link-por", className="sidebar-link"),
 
             html.Div([
                 html.I(className="fas fa-book", style={"marginRight": "8px"}),
@@ -177,6 +165,38 @@ app.layout = html.Div([
     ], className="layout-container")
 ])
         
+app.clientside_callback(
+    """
+    function(theme) {
+        if (theme) {
+            document.documentElement.setAttribute("data-theme", theme);
+            const icon = document.getElementById("theme-toggle");
+            if (icon) {
+                icon.classList.remove("fa-sun", "fa-moon");
+                icon.classList.add(theme === "dark" ? "fa-sun" : "fa-moon");
+            }
+        }
+        return "";
+    }
+    """,
+    Output("theme-toggle", "title"),  # Dummy Output, da Clientside Callback Output braucht
+    Input("theme-store", "data")
+)
+        
+
+app.clientside_callback(
+    """
+    function(n_clicks, current_theme) {
+        if (!n_clicks) {
+            return current_theme || "dark";
+        }
+        return current_theme === "dark" ? "light" : "dark";
+    }
+    """,
+    Output("theme-store", "data"),
+    Input("theme-toggle", "n_clicks"),
+    State("theme-store", "data")
+)
 
 
 @app.callback(
@@ -379,12 +399,12 @@ def update_search_suggestions(query):
     suggestions.sort(reverse=True)
     
     tab_labels = {
-    "tab-home": "🏠 Projekt",
-    "tab-data": "🌍 Energiedaten",
-    "tab-core": "📈 Zentrale Ergebnisse",
-    "tab-lt": "📉 Langzeitanalyse",
-    "tab-sensitivity": "📐 Modellvergleich",
-    "tab-por": "📊 POR-Analyse"
+    "tab-home": "Projekt",
+    "tab-data": "Reanalyse und Energie",
+    "tab-core": "Zentrale Ergebnisse",
+    "tab-lt": "Langzeitanalyse",
+    "tab-sensitivity": "Modellgüte",
+    "tab-por": "POR-Analyse"
     }
     
     return [

@@ -235,6 +235,10 @@ METRIC_INFO = {
     "num_points": {
         "metric_en": "Number of Data Points",
         "metric_de": "Anzahl der Regressionspunkte"
+    },
+    "num_years_windiness": {
+        "metric_en": "Number of Years for LT-Correction",
+        "metric_de": "Anzahl der Jahre zur LT-Korrektur"
     }
 }
 
