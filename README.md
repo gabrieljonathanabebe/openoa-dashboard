@@ -23,7 +23,7 @@ openoa-dashboard/
 ├── components/           # Layouts der Tabs
 ├── data/
 │   ├── raw/              # Eingabedaten (CSV-Simulationsergebnisse)
-│   ├── processed/              # Transformierte Eingabedaten
+│   ├── processed/        # Transformierte Eingabedaten
 │   └── config.py         # Farben, Metrikdefinitionen
 ├── utils/
 │   ├── plot_utils/       # Plotfunktionen pro Bereich (data.py, core.py etc.)
