@@ -1,36 +1,39 @@
 from dash import dcc, html
 
-tab_lt_layout = html.Div([
+# ------------------------------------------------------
+# Layout: Langzeitanalyse
+# ------------------------------------------------------
+
+lt_layout = html.Div([
     # Titel mit Icon
     html.H2([
         html.I(className="fas fa-wave-square", style={"marginRight": "10px"}),
         "Langzeitanalyse"
     ], className="home-title"),
 
-    # Einführungstext zur LT-Analyse
+    # Einführung
     html.P("""
-        Diese Ansicht untersucht die langfristige Korrektur des Energieertrags innerhalb jeder Monte-Carlo-Analyse. 
-        Der Fokus liegt auf der interannuellen Variabilität (IAV), welche als Haupttreiber für die Unsicherheit in der 
-        AEP-Prognose gilt.
+        In dieser Ansicht wird die langfristige Entwicklung des Energieertrags in den verschiedenen 
+        Monte-Carlo-Analysen untersucht. Im Mittelpunkt steht die interannuelle Variabilität (IAV), 
+        die als wesentliche Quelle für Unsicherheiten in der AEP-Prognose gilt.
     """, className="home-paragraph"),
 
-    # Untertitel & Beschreibung zur ersten Grafik
-    html.H3("Entwicklung der Energie und IAV", className="home-subtitle"),
+    # Untertitel & Beschreibung zur ersten Visualisierung
+    html.H3("Entwicklung von Energie und IAV", className="home-subtitle"),
     html.P("""
-        Die linke Grafik zeigt die jährliche Bruttoenergie eines Windparks über die Langzeitperiode. 
-        Die gestrichelte Linie stellt den modellierten Jahreswert dar, während die durchgezogene Linie 
-        den kumulierten Mittelwert zeigt und damit visualisiert, wie sich die Prognose mit zunehmender Zeit stabilisiert.
+        Die linke Visualisierung zeigt die jährliche Bruttoenergie eines Windparks über die Langzeitperiode. 
+        Die transparenten Linien bilden die jährlichen Modellwerte ab, während die kräftigeren Linien den 
+        kumulierten Mittelwert darstellt. Sie verdeutlicht, wie sich die Prognose über die Zeit stabilisiert.
     """, className="home-paragraph"),
     html.P("""
-        Auf der rechten Seite wird die Entwicklung der interannuellen Variabilität (IAV) dargestellt. 
-        Über Dropdown-Menüs lassen sich verschiedene Monte-Carlo-Analysen auswählen sowie optional 
-        zwischen Energie- und Winddaten umschalten.
+        Rechts daneben ist die Entwicklung der interannuellen Variabilität (IAV) zu sehen. Über die Dropdown-Menüs 
+        lassen sich verschiedene Monte-Carlo-Analysen einblenden oder zwischen Energie- und Winddaten umschalten.
     """, className="home-paragraph mb-40"),
 
-    # Dropdowns (Seite an Seite)
+    # Dropdowns zur Steuerung
     html.Div([
         html.Div([
-            html.Label("Monte-Carlo-Analysen auswählen:", className="home-paragraph"),
+            html.Label("MC-Analysen auswählen:", className="home-paragraph"),
             dcc.Dropdown(
                 id="lt-mc-dropdown",
                 options=[
@@ -47,7 +50,7 @@ tab_lt_layout = html.Div([
         ], style={"flex": "1"}),
 
         html.Div([
-            html.Label("LT-Variable auswählen:", className="home-paragraph"),
+            html.Label("LT-Variable:", className="home-paragraph"),
             dcc.Dropdown(
                 id="lt-metric-dropdown",
                 options=[
@@ -60,7 +63,7 @@ tab_lt_layout = html.Div([
         ], style={"flex": "1"})
     ], style={"display": "flex"}, className="plot-dropdown-container"),
 
-    # Plot: Entwicklung
+    # Plot zur Langzeitentwicklung
     html.Div([
         dcc.Loading(
             id="lt-loading",
@@ -70,16 +73,16 @@ tab_lt_layout = html.Div([
         )
     ], className="plot-container"),
 
-    # Untertitel & Erklärung zum zweiten Plot
-    html.H3("Energie vs. Regressionssteigung", className="home-subtitle mt-40"),
-    html.P([
-        """In diesem Scatterplot-Vergleich können zwei Monte-Carlo-Analysen visuell gegenübergestellt werden.
-        Die y-Achse zeigt die vorhergesagte jährliche Energie, die x-Achse die berechnete Regressionssteigung.
-        Die Farbskala kodiert die durchschnittliche Windgeschwindigkeit im jeweiligen Jahr."""
-    ], className="home-paragraph"),
-    html.P("Über das Dropdown-Feld lassen sich bestimmte Jahre gezielt auswählen.", className="home-paragraph mb-40"),
+    # Zweiter Abschnitt: Slope-Analyse
+    html.H3("Energie im Verhältnis zur Regressionssteigung", className="home-subtitle mt-40"),
+    html.P("""
+        Dieser Scatterplot-Vergleich stellt zwei Monte-Carlo-Analysen gegenüber. Auf der y-Achse ist die prognostizierte 
+        Jahresenergie zu sehen, auf der x-Achse die berechnete Regressionssteigung. Die Farbskala zeigt zusätzlich 
+        die durchschnittliche Windgeschwindigkeit pro Jahr.
+    """, className="home-paragraph"),
+    html.P("Die Auswahl spezifischer Jahre erfolgt über das Dropdown-Feld unten.", className="home-paragraph mb-40"),
 
-    # Dropdown zur Auswahl der Jahre
+    # Dropdown: Jahre
     html.Div([
         html.Label("Jahr(e) auswählen:", className="home-paragraph"),
         dcc.Dropdown(
@@ -91,10 +94,10 @@ tab_lt_layout = html.Div([
         )
     ], style={"marginBottom": "20px"}, className="plot-dropdown-container"),
 
-    # Vergleich zweier MC-Simulationen
+    # Vergleich zweier Analysen
     html.Div([
         html.Div([
-            html.Label("Linke MC-Analyse auswählen:", className="home-paragraph"),
+            html.Label("Linke Analyse:", className="home-paragraph"),
             dcc.Dropdown(
                 id="lt-left-dropdown",
                 options=[
@@ -110,7 +113,7 @@ tab_lt_layout = html.Div([
         ], style={"flex": "1"}),
 
         html.Div([
-            html.Label("Rechte MC-Analyse auswählen:", className="home-paragraph"),
+            html.Label("Rechte Analyse:", className="home-paragraph"),
             dcc.Dropdown(
                 id="lt-right-dropdown",
                 options=[
@@ -126,7 +129,7 @@ tab_lt_layout = html.Div([
         ], style={"flex": "1"})
     ], style={"display": "flex"}, className="plot-dropdown-container"),
 
-    # Plot: Slope-Energy
+    # Plot zur Slope-Energie-Korrelation
     html.Div([
         dcc.Loading(
             id="lt-slope-loading",

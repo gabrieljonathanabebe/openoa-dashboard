@@ -11,7 +11,7 @@ def transform_energy_wind_data(df, dataset_name=None):
             energy_raw = df.iloc[iteration]["yearly_gross_energy"]
             wind_raw = df.iloc[iteration]["yearly_wind_speeds"]
 
-            # Konvertiere, wenn nötig, von String zu Liste
+            # Konvertieren, wenn nötig, von String zu Liste
             if isinstance(energy_raw, str):
                 energy_values = ast.literal_eval(energy_raw)
             else:
@@ -46,12 +46,12 @@ def transform_energy_wind_data(df, dataset_name=None):
                 })
 
         except Exception as e:
-            print(f"⚠️  Fehler bei Iteration {iteration}: {e}")
-            continue  # Überspringe diese Zeile bei Fehlern
+            print(f"Fehler bei Iteration {iteration}: {e}")
+            continue  
 
     transformed_df = pd.DataFrame(data)
 
     if dataset_name:
-        print(f"✅ Transformation für {dataset_name} abgeschlossen. {len(transformed_df)} Zeilen erstellt.")
+        print(f"Transformation für {dataset_name} abgeschlossen. {len(transformed_df)} Zeilen erstellt.")
 
     return transformed_df

@@ -59,7 +59,7 @@ def add_mean_y_line(fig, x_vals, y_vals, row=None, col=None, color="#FF1493", na
 
 
 
-def get_time_series_plot(era5_ts, merra2_ts):
+def plot_reanalysis_timeseries(era5_ts, merra2_ts):
     fig = go.Figure()
     
     fig.add_trace(
@@ -109,7 +109,10 @@ def get_time_series_plot(era5_ts, merra2_ts):
 
 
 
-def get_aep_compare_plots(stats, dataframes):
+
+
+
+def plot_aep_comparison(stats, dataframes):
     fig = make_subplots(
         rows=2, cols=3,
         specs=[
@@ -117,7 +120,7 @@ def get_aep_compare_plots(stats, dataframes):
             [{"colspan":2, "type":"scatter"}, None, {"type":"violin"}]
         ],
         subplot_titles=[
-            "Mittelwert", "Unsicherheit(CV)", "Boxplots",
+            "Mittelwert (GWh/yr)", "Unsicherheit (CV)", "Boxplots",
             "Jitterplot", "Violinplots"
         ],
         vertical_spacing=0.1,
@@ -131,6 +134,9 @@ def get_aep_compare_plots(stats, dataframes):
             x=stats["labels"],
             y=stats["mean_aep"],
             marker_color = colors,
+            text=[f"{v:.2f}" for v in stats["mean_aep"]],
+            textfont=dict(color=colors),
+            textposition="outside",
             showlegend=False
         ),
         row=1, col=1
@@ -141,6 +147,9 @@ def get_aep_compare_plots(stats, dataframes):
             x=stats["labels"],
             y=stats["aep_cv"],
             marker_color = colors,
+            text=[f"{v:.2%}" for v in stats["aep_cv"]],
+            textfont=dict(color=colors),
+            textposition="outside",
             showlegend=False
         ),
         row=1, col=2
@@ -223,6 +232,8 @@ def get_aep_compare_plots(stats, dataframes):
     
     fig.update_xaxes(showline=True, linewidth=2, linecolor='gray', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='gray', mirror=True)
+    fig.update_yaxes(range=[0, max(stats["mean_aep"]) * 1.2], row=1, col=1)
+    fig.update_yaxes(range=[0, max(stats["aep_cv"]) * 1.2], row=1, col=2)
     
     apply_dark_mode_colors(fig)
     
@@ -238,7 +249,7 @@ def get_aep_compare_plots(stats, dataframes):
 
 
 
-def get_aep_analysis_plot(filtered_dfs, metric = "aep_final"):
+def plot_core_aep_iteration_analysis(filtered_dfs, metric = "aep_final"):
     fig = make_subplots(
         rows=2, cols=2,
         specs=[[{}, {}], [{"colspan":2}, None]],
@@ -341,7 +352,7 @@ def get_aep_analysis_plot(filtered_dfs, metric = "aep_final"):
     return fig
 
 
-def get_lt_evolution_plot(dataframes, selected_labels, column="energy"):
+def plot_lt_energy_evolution(dataframes, selected_labels, column="energy"):
     title_left = "LT-Bruttoenergie" if column == "energy" else "LT-Wind"
     title_right = "IAV-Energie" if column == "energy" else "IAV-Wind"
     
@@ -427,7 +438,7 @@ def get_lt_evolution_plot(dataframes, selected_labels, column="energy"):
 
 
 
-def get_slope_energy_plot(left_df, right_df, selected_years, left_label, right_label):
+def plot_lt_energy_slope_comparison(left_df, right_df, selected_years, left_label, right_label):
     # Daten filtern:
     left_filtered = filter_lt_data(left_df, selected_years)
     right_filtered = filter_lt_data(right_df, selected_years)
@@ -535,7 +546,7 @@ def get_slope_energy_plot(left_df, right_df, selected_years, left_label, right_l
     return fig
 
 
-def get_model_comparison_plot(df1, df2, metric, label1, label2):
+def plot_reg_model_distribution(df1, df2, metric, label1, label2):
     fig = make_subplots(
         rows=1,
         cols=2,
@@ -601,7 +612,7 @@ def get_model_comparison_plot(df1, df2, metric, label1, label2):
     return fig
 
 
-def get_model_scatter_plot(df1, df2, x_metric, y_metric, z_metric, label1, label2):
+def plot_reg_model_metric_scatter(df1, df2, x_metric, y_metric, z_metric, label1, label2):
     x_min, x_max = get_global_axis_range(x_metric, df1, df2)
     y_min, y_max = get_global_axis_range(y_metric, df1, df2)
     
@@ -684,7 +695,68 @@ def get_model_scatter_plot(df1, df2, x_metric, y_metric, z_metric, label1, label
     return fig
 
 
-def get_por_hist_violin_plot(df1, df2, label1, label2, observed_value, options):
+def plot_reg_model_correlation_matrix(left_df, right_df, title_left, title_right, metrics):
+    def compute_corr(df):
+        return df[metrics].corr()
+
+    corr_left = compute_corr(left_df)
+    corr_right = compute_corr(right_df)
+    
+    x_labels = [break_label(METRIC_INFO[m]["metric_en"]) for m in metrics]
+    y_labels = [break_label(METRIC_INFO[m]["metric_en"]) for m in metrics]
+
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        subplot_titles=[title_left, title_right],
+        horizontal_spacing=0.05  # Standard ist 0.2
+    )
+    heatmap_kwargs = dict(
+        zmin=-1,
+        zmax=1,
+        colorscale=[(0, "red"), (0.5, "white"), (1, "green")],
+        colorbar=dict(title="Korrelation")
+    )
+
+    # Linke Matrix
+    fig.add_trace(
+        go.Heatmap(
+            z=corr_left.values,
+            x=x_labels,
+            y=y_labels,
+            text=[[f"{val:.2f}" for val in row] for row in corr_left.values],
+            texttemplate="%{text}",
+            **heatmap_kwargs
+        ),
+        row=1, col=1
+    )
+
+    # Rechte Matrix
+    fig.add_trace(
+        go.Heatmap(
+            z=corr_right.values,
+            x=x_labels,
+            y=y_labels,
+            text=[[f"{val:.2f}" for val in row] for row in corr_right.values],
+            texttemplate="%{text}",
+            **{**heatmap_kwargs, "showscale": False}  # zweite Skala ausblenden
+        ),
+        row=1, col=2
+    )
+
+    fig.update_layout(
+        height = 500,
+        title="Korrelationen zwischen Modellkoeffizienten",
+        title_x=0.5,
+    )
+    
+    fig.update_yaxes(showticklabels=False, row=1, col=2)
+
+    apply_dark_mode_colors(fig)
+    return fig
+
+
+def plot_por_energy_distribution(df1, df2, label1, label2, observed_value, options):
     fig = make_subplots(
         rows=1, cols=2,
         subplot_titles=["Histogramm", "Split-Violinplot"],
@@ -794,70 +866,11 @@ def get_por_hist_violin_plot(df1, df2, label1, label2, observed_value, options):
     return fig
 
 
-def get_correlation_matrices(left_df, right_df, title_left, title_right, metrics):
-    def compute_corr(df):
-        return df[metrics].corr()
-
-    corr_left = compute_corr(left_df)
-    corr_right = compute_corr(right_df)
-    
-    x_labels = [break_label(METRIC_INFO[m]["metric_en"]) for m in metrics]
-    y_labels = [break_label(METRIC_INFO[m]["metric_en"]) for m in metrics]
-
-    fig = make_subplots(
-        rows=1,
-        cols=2,
-        subplot_titles=[title_left, title_right],
-        horizontal_spacing=0.05  # Standard ist 0.2
-    )
-    heatmap_kwargs = dict(
-        zmin=-1,
-        zmax=1,
-        colorscale=[(0, "red"), (0.5, "white"), (1, "green")],
-        colorbar=dict(title="Korrelation")
-    )
-
-    # Linke Matrix
-    fig.add_trace(
-        go.Heatmap(
-            z=corr_left.values,
-            x=x_labels,
-            y=y_labels,
-            text=[[f"{val:.2f}" for val in row] for row in corr_left.values],
-            texttemplate="%{text}",
-            **heatmap_kwargs
-        ),
-        row=1, col=1
-    )
-
-    # Rechte Matrix
-    fig.add_trace(
-        go.Heatmap(
-            z=corr_right.values,
-            x=x_labels,
-            y=y_labels,
-            text=[[f"{val:.2f}" for val in row] for row in corr_right.values],
-            texttemplate="%{text}",
-            **{**heatmap_kwargs, "showscale": False}  # zweite Skala ausblenden
-        ),
-        row=1, col=2
-    )
-
-    fig.update_layout(
-        height = 500,
-        title="Korrelationen zwischen Modellkoeffizienten",
-        title_x=0.5,
-    )
-    
-    fig.update_yaxes(showticklabels=False, row=1, col=2)
-
-    apply_dark_mode_colors(fig)
-    return fig
 
 
 
 # Regressionsplot
-def get_regression_plot(df1, df2, metric, value, label1, label2):
+def plot_por_regression_analysis(df1, df2, metric, value, label1, label2):
     # Hilfsfunktion für Punkte
     def add_trace(fig, df, source, color, symbol, name, row=1, col=1, showlegend=True):
         filtered = df[df["source"] == source]
@@ -989,7 +1002,7 @@ def get_regression_plot(df1, df2, metric, value, label1, label2):
 
 
 
-def get_por_timeseries_plot(df_dict, selected_labels, metric="r2", method="max"):
+def plot_por_energy_timeseries(df_dict, selected_labels, metric="r2", method="max"):
     fig = go.Figure()
 
     for label in selected_labels:

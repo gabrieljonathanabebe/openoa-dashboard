@@ -1,7 +1,5 @@
-import numpy as np
-import pandas as pd
-
 from data.config import TIMESERIES_DATAFRAMES
+
 
 def compute_normalized_timeseries():
     era5_ts = TIMESERIES_DATAFRAMES["ERA5"].copy()
@@ -32,6 +30,7 @@ def get_aep_stats(dataframes):
     
     return stats
 
+
 def filter_dataframes_by_labels(dataframes, selected_labels):    
     filtered = {}
     
@@ -54,7 +53,8 @@ def compute_lt_metrics(df, column ="energy"):
     cum_cv = (cum_std / cum_mean) * 100
     
     return years, non_cum_mean, cum_mean, cum_cv
-    
+
+
 def filter_lt_data(df, selected_years):
     return df[df["year"].isin(selected_years)]
 
@@ -79,17 +79,10 @@ def get_iteration(df, metric, method="max"):
     else:
         raise ValueError(f"Unbekannte Methode: {method}")
     
-    # Finde den Index der Zeile, bei der der Wert dem Zielwert am nächsten ist
     closest_index = (df[metric] - target_value).abs().idxmin()
 
     return df.loc[closest_index, "iteration"]
         
-    
-
-
-
-def compute_mean(values):
-    return np.mean(values)
 
 
 

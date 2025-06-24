@@ -1,6 +1,6 @@
 from dash import html
 
-tab_glossary_layout = html.Div([
+glossary_layout = html.Div([
     html.H2([
         html.I(className="fas fa-scroll", style={"marginRight": "10px"}),
         "Glossar & Definitionen"

@@ -23,11 +23,11 @@ def transform_reg_data_combined(df, aggregate_df, wind_column,
     all_data = []
 
     if mode not in ["scatter", "full"]:
-        raise ValueError("⚠️ Ungültiger Modus: 'mode' muss 'scatter' oder 'full' sein.")
+        raise ValueError("Ungültiger Modus: 'mode' muss 'scatter' oder 'full' sein.")
 
     if mode == "scatter":
         if not bootstrap_list or not non_bootstrap_list:
-            raise ValueError("⚠️ Für 'scatter' müssen bootstrap_list & non_bootstrap_list übergeben werden.")
+            raise ValueError("Für 'scatter' müssen bootstrap_list & non_bootstrap_list übergeben werden.")
 
         for i in range(len(df)):
             try:
@@ -55,12 +55,12 @@ def transform_reg_data_combined(df, aggregate_df, wind_column,
 
                 all_data.extend([b_raw, nb_raw])
             except Exception as e:
-                print(f"⚠️ Fehler in Iteration {i} (scatter): {e}")
+                print(f"Fehler in Iteration {i} (scatter): {e}")
                 continue
 
     elif mode == "full":
         if wind_column not in aggregate_df.columns:
-            raise ValueError(f"⚠️ Spalte '{wind_column}' nicht in aggregate_df gefunden!")
+            raise ValueError(f"Spalte '{wind_column}' nicht in aggregate_df gefunden!")
 
         for i in range(len(df)):
             try:
@@ -85,16 +85,16 @@ def transform_reg_data_combined(df, aggregate_df, wind_column,
 
                 all_data.append(iter_df)
             except Exception as e:
-                print(f"⚠️ Fehler in Iteration {i} (full): {e}")
+                print(f"Fehler in Iteration {i} (full): {e}")
                 continue
 
     if not all_data:
-        raise ValueError("⚠️ Keine gültigen Daten zum Zusammenführen gefunden.")
+        raise ValueError("Keine gültigen Daten zum Zusammenführen gefunden.")
 
     full_df = pd.concat(all_data, ignore_index=True)
     full_df["time"] = pd.to_datetime(full_df["time"])
     full_df["dataset"] = dataset_name
 
-    print(f"✅ Transformation ({mode}) für {dataset_name} abgeschlossen. {len(full_df)} Zeilen erstellt.")
+    print(f"Transformation ({mode}) für {dataset_name} abgeschlossen. {len(full_df)} Zeilen erstellt.")
     return full_df
 

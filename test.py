@@ -1,5 +1,5 @@
 git add .
-git commit -m "Kurzbeschreibung der Ã„nderung"
+git commit -m "Kurzbeschreibung der Ãnderung"
 git push origin main
 
 

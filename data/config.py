@@ -6,9 +6,10 @@ import pandas as pd
 RAW_DIR = os.path.join("data", "raw")
 PROCESSED_POR_DIR = os.path.join("data", "processed", "por")
 PROCESSED_SCATTER_DIR = os.path.join("data", "processed", "scatter")
-# ... Imports und andere Konstanten ...
+
 
 GROSS_POR_OBSERVED = 12.229
+
 
 AVAILABLE_DATASETS = {
     "ERA5": "mc_era5.csv",
