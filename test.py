@@ -1,5 +1,5 @@
 git add .
-git commit -m "Kurzbeschreibung der Ãnderung"
+git commit -m "Modularisierung der Plotfunktionen und Aufräumen der Struktur (utils/plot_utils, Layout-Importe angepasst)"
 git push origin main
 
 

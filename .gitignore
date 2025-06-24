@@ -195,4 +195,12 @@ cython_debug/
 
 # OpenOA Codes
 examples/
-scripts/run_simulation.py
+
+
+test.py
+test2.py
+archive.py
+scripts/run_transform_lt
+scripts/run_transform_por
+
+

@@ -24,4 +24,4 @@ for filename, label in datasets.items():
     out_path = os.path.join(OUT_DIR, f"mc_{label}_lt.csv")
     df_transformed.to_csv(out_path, index=False)
 
-    print(f"✅ Gespeichert: {out_path}")
+    print(f"Gespeichert: {out_path}")
