@@ -14,21 +14,26 @@ Ein interaktives Dashboard zur Visualisierung und Analyse von Windenergie-Simula
 
 ## Projektstruktur
 
+<pre>
+```
 openoa-dashboard/
-├── app.py                  # Haupt-Dash-Anwendung
-├── assets/                 # CSS-Dateien (z. B. styles.css)
-├── callbacks/              # Dash-Callbacks pro Tab (core.py, lt.py, etc.)
-├── components/             # Layouts der Tabs
+├── app.py                # Haupt-Dash-Anwendung
+├── assets/               # CSS-Dateien (z. B. styles.css)
+├── callbacks/            # Dash-Callbacks pro Tab (core.py, lt.py, etc.)
+├── components/           # Layouts der Tabs
 ├── data/
-│   ├── raw/                # Eingabedaten (CSV-Simulationsergebnisse)
-│   └── config.py           # Farben, Metrikdefinitionen
+│   ├── raw/              # Eingabedaten (CSV-Simulationsergebnisse)
+│   └── config.py         # Farben, Metrikdefinitionen
 ├── utils/
-│   ├── plot_utils/         # Plotfunktionen pro Bereich (data.py, core.py etc.)
-│   ├── compute_stats.py    # Statistische Hilfsfunktionen
-│   ├── transform_lt.py     # LT-spezifische Transformationen
-│   └── transform_por.py    # POR-spezifische Transformationen
-├── requirements.txt        # Abhängigkeiten
-└── README.md               # Diese Datei
+│   ├── plot_utils/       # Plotfunktionen pro Bereich (data.py, core.py etc.)
+│   ├── compute_stats.py  # Statistische Hilfsfunktionen
+│   ├── transform_lt.py   # LT-spezifische Transformationen
+│   └── transform_por.py  # POR-spezifische Transformationen
+├── requirements.txt      # Abhängigkeiten
+└── README.md             # Diese Datei
+```
+</pre>
+
 
 ## Voraussetzungen
 
