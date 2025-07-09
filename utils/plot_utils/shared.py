@@ -21,6 +21,13 @@ def apply_dark_mode_colors(fig):
     return fig
 
 
+def normalize_bubble_size(series, min_size=3, max_size=20, global_min=None, global_max=None):
+    global_min = series.min() if global_min is None else global_min
+    global_max = series.max() if global_max is None else global_max
+    norm = (series - global_min) / (global_max - global_min + 1e-9)
+    return norm * (max_size - min_size) + min_size
+
+
 
 def get_global_axis_range(column, *dfs, padding_factor=0.05):
     all_values = pd.concat([df[column] for df in dfs])
@@ -34,6 +41,10 @@ def get_global_axis_range(column, *dfs, padding_factor=0.05):
 
 
 def get_global_color_scale_bounds(column, *dfs):
+    all_values = pd.concat([df[column] for df in dfs])
+    return all_values.min(), all_values.max()
+
+def get_global_size_bounds(column, *dfs):
     all_values = pd.concat([df[column] for df in dfs])
     return all_values.min(), all_values.max()
 

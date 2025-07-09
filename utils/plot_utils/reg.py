@@ -6,7 +6,9 @@ from utils.plot_utils.shared import (
     apply_dark_mode_colors,
     get_global_axis_range,
     get_global_color_scale_bounds,
-    break_label
+    get_global_size_bounds,
+    break_label,
+    normalize_bubble_size
 )
 
 
@@ -74,10 +76,11 @@ def plot_reg_model_distribution(df1, df2, metric, label1, label2):
     return fig
 
 
-def plot_reg_model_metric_scatter(df1, df2, x_metric, y_metric, z_metric, label1, label2):
+def plot_reg_model_metric_scatter(df1, df2, x_metric, y_metric, z_metric, size_metric, label1, label2):
     x_min, x_max = get_global_axis_range(x_metric, df1, df2)
     y_min, y_max = get_global_axis_range(y_metric, df1, df2)
     cmin, cmax = get_global_color_scale_bounds(z_metric, df1, df2)
+    size_min, size_max = get_global_size_bounds(size_metric, df1, df2)
 
     fig = make_subplots(
         rows=1,
@@ -100,9 +103,9 @@ def plot_reg_model_metric_scatter(df1, df2, x_metric, y_metric, z_metric, label1
                 name=label,
                 showlegend=False,
                 marker=dict(
-                    size=5,
+                    size=normalize_bubble_size(df[size_metric], min_size=3, max_size=20, global_min=size_min, global_max=size_max),
                     color=df[z_metric],
-                    colorscale="RdYlGn",
+                    colorscale="viridis",
                     cmin=cmin,
                     cmax=cmax,
                     showscale=show_colorbar,
@@ -112,7 +115,11 @@ def plot_reg_model_metric_scatter(df1, df2, x_metric, y_metric, z_metric, label1
                             side="right"
                         )
                     ) if show_colorbar else None,
-                    opacity=0.7
+                    opacity=0.7,
+                    line=dict(
+                        color="gray",       
+                        width=0.5          
+                    )
                 )
             ),
             row=1, col=col

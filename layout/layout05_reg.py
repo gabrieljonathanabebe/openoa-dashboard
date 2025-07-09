@@ -50,7 +50,7 @@ reg_layout = html.Div([
 
             html.Br(),
 
-            html.Label("Analyse links:"),
+            html.Label("Analyse 1:"),
             dcc.Dropdown(
                 id="label-1-dropdown",
                 options=[{"label": label, "value": label} for label in DATAFRAMES.keys()],
@@ -60,7 +60,7 @@ reg_layout = html.Div([
 
             html.Br(),
 
-            html.Label("Analyse rechts:"),
+            html.Label("Analyse 2:"),
             dcc.Dropdown(
                 id="label-2-dropdown",
                 options=[{"label": label, "value": label} for label in DATAFRAMES.keys()],
@@ -124,6 +124,16 @@ reg_layout = html.Div([
                 id="z-metric-dropdown",
                 options=[{"label": info["metric_en"], "value": key} for key, info in METRIC_INFO.items()],
                 value="slope",
+                clearable=False
+            ),
+            
+            html.Br(),
+            
+            html.Label("Größenmetrik (Bubble Size):"),
+            dcc.Dropdown(
+                id="size-metric-dropdown",
+                options=[{"label": info["metric_en"], "value": key} for key, info in METRIC_INFO.items()],
+                value="intercept",  # Standardwert
                 clearable=False
             )
         ], style={"flex": "1"}, className="sidebar-dropdown-group"),

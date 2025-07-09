@@ -26,14 +26,15 @@ def update_reg_model_distribution(metric, label1, label2):
     Input("x-metric-dropdown", "value"),
     Input("y-metric-dropdown", "value"),
     Input("z-metric-dropdown", "value"),
+    Input("size-metric-dropdown", "value"),  # <--- NEU
     Input("scatter-label-1-dropdown", "value"),
     Input("scatter-label-2-dropdown", "value")
 )
-def update_reg_model_metric_scatter(x_metric, y_metric, z_metric, label1, label2):
+def update_reg_model_metric_scatter(x_metric, y_metric, z_metric, size_metric, label1, label2):
     """Scatterplot dreier Modellmetriken mit Farbcodierung (Reg-Tab)."""
     df1 = DATAFRAMES[label1]
     df2 = DATAFRAMES[label2]
-    return plot_reg_model_metric_scatter(df1, df2, x_metric, y_metric, z_metric, label1, label2)
+    return plot_reg_model_metric_scatter(df1, df2, x_metric, y_metric, z_metric, size_metric, label1, label2)
 
 
 @callback(
