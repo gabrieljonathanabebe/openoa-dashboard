@@ -119,7 +119,7 @@ reg_layout = html.Div([
 
             html.Br(),
 
-            html.Label("Farbmetrik (Z):"),
+            html.Label("Farbmetrik:"),
             dcc.Dropdown(
                 id="z-metric-dropdown",
                 options=[{"label": info["metric_en"], "value": key} for key, info in METRIC_INFO.items()],
@@ -129,13 +129,34 @@ reg_layout = html.Div([
             
             html.Br(),
             
-            html.Label("Größenmetrik (Bubble Size):"),
+            html.Label("Bubblemetrik:"),
             dcc.Dropdown(
                 id="size-metric-dropdown",
                 options=[{"label": info["metric_en"], "value": key} for key, info in METRIC_INFO.items()],
                 value="intercept",  # Standardwert
                 clearable=False
-            )
+            ), 
+            
+            html.Br(),
+            
+            html.Div([
+                html.Label("Filtervariable:"),
+                dcc.Dropdown(
+                    id="filter-metric-dropdown",
+                    options=[{"label": info["metric_en"], "value": key} for key, info in METRIC_INFO.items()],
+                    value="intercept",  # Default
+                    clearable=False
+                ),
+            
+                html.Br(),
+            
+                html.Label("Wertebereich:"),
+                dcc.RangeSlider(
+                    id="filter-range-slider",
+                    tooltip={"always_visible": True, "placement": "bottom"},
+                    step=0.01  # je nach Metrik ggf. dynamisch setzen
+                )
+            ], style={"marginBottom": "20px"})
         ], style={"flex": "1"}, className="sidebar-dropdown-group"),
 
         # Grafik

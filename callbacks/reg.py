@@ -1,3 +1,5 @@
+import pandas as pd
+
 from dash import callback, Output, Input
 from data.config import DATAFRAMES
 from utils.plot_utils.reg import (
@@ -26,15 +28,48 @@ def update_reg_model_distribution(metric, label1, label2):
     Input("x-metric-dropdown", "value"),
     Input("y-metric-dropdown", "value"),
     Input("z-metric-dropdown", "value"),
-    Input("size-metric-dropdown", "value"),  # <--- NEU
+    Input("size-metric-dropdown", "value"),
+    Input("scatter-label-1-dropdown", "value"),
+    Input("scatter-label-2-dropdown", "value"),
+    Input("filter-metric-dropdown", "value"),
+    Input("filter-range-slider", "value"),
+)
+def update_reg_model_metric_scatter(x_metric, y_metric, z_metric, size_metric,
+                                    label1, label2, filter_metric, filter_range):
+    df1 = DATAFRAMES[label1]
+    df2 = DATAFRAMES[label2]
+
+    df1_filtered = df1[
+        (df1[filter_metric] >= filter_range[0]) &
+        (df1[filter_metric] <= filter_range[1])
+    ]
+    df2_filtered = df2[
+        (df2[filter_metric] >= filter_range[0]) &
+        (df2[filter_metric] <= filter_range[1])
+    ]
+
+    return plot_reg_model_metric_scatter(
+        df1_filtered, df2_filtered,
+        x_metric, y_metric, z_metric, size_metric,
+        label1, label2
+    )
+
+
+@callback(
+    Output("filter-range-slider", "min"),
+    Output("filter-range-slider", "max"),
+    Output("filter-range-slider", "value"),
+    Input("filter-metric-dropdown", "value"),
     Input("scatter-label-1-dropdown", "value"),
     Input("scatter-label-2-dropdown", "value")
 )
-def update_reg_model_metric_scatter(x_metric, y_metric, z_metric, size_metric, label1, label2):
-    """Scatterplot dreier Modellmetriken mit Farbcodierung (Reg-Tab)."""
+def update_slider_bounds(metric, label1, label2):
     df1 = DATAFRAMES[label1]
     df2 = DATAFRAMES[label2]
-    return plot_reg_model_metric_scatter(df1, df2, x_metric, y_metric, z_metric, size_metric, label1, label2)
+    all_values = pd.concat([df1[metric], df2[metric]])
+    min_val = float(all_values.min())
+    max_val = float(all_values.max())
+    return min_val, max_val, [min_val, max_val]
 
 
 @callback(
