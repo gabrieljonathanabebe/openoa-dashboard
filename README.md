@@ -1,66 +1,93 @@
-# OpenOA Dashboard – MC-Analyse & AEP-Auswertung
+# OpenOA Dashboard – Monte Carlo AEP Analysis
 
-Ein interaktives Dashboard zur Visualisierung und Analyse von Windenergie-Simulationen basierend auf der OpenOA-Bibliothek. Es unterstützt Monte-Carlo-Auswertungen, Modellgütevergleiche, Unsicherheiten und Metriken im Rahmen von Windparkprojekten.
+An interactive dashboard for **visualization and analysis of wind energy simulations** based on the [OpenOA](https://github.com/NREL/OpenOA) library.  
+It supports Monte Carlo evaluations, model performance comparisons, uncertainty analysis, and sensitivity metrics within wind park projects.
+
+---
 
 ## Features
 
-- Vergleich mehrerer Reanalyseprodukte (z. B. ERA5, MERRA2)
-- Interaktive Visualisierungen (Histogramme, Violinplots, Scatterplots, Heatmaps, Zeitreihen)
-- Analyse der Modellgüte (Korrelationen, Steigungen, CV, Bias usw.)
-- Iterationsanalyse und Sensitivität
-- Umschaltbarer Light-/Dark-Mode
-- Automatisch generierte Plots auf Basis von CSV-Dateien
-- Modularer Codeaufbau pro Auswertungsbereich
+- Compare multiple reanalysis datasets (ERA5, MERRA2, combined, filtered)
+- Interactive visualizations (histograms, violin plots, scatter plots, time series)
+- Model quality metrics (R², slope, bias, CV, etc.)
+- Iteration analysis and sensitivity exploration
+- Switchable light/dark mode
+- Modular code structure (callbacks, utils, layouts)
 
-## Projektstruktur
+---
+
+## Screenshots
+
+**Light Mode**
+
+![Light Mode](assets/readme/screenshot-light.png)
+
+**Dark Mode**
+
+![Dark Mode](assets/readme/screenshot-dark.png)
+
+---
+
+## Project structure
 
 <pre>
 ```
 openoa-dashboard/
-├── app.py                # Haupt-Dash-Anwendung
-├── assets/               # CSS-Dateien (z. B. styles.css)
-├── callbacks/            # Dash-Callbacks pro Tab (core.py, lt.py, etc.)
-├── components/           # Layouts der Tabs
+├── app.py                # Main Dash application
+├── assets/               # CSS
+├── callbacks/            # Dash callbacks per tab
 ├── data/
 │   ├── raw/              # Eingabedaten (CSV-Simulationsergebnisse)
 │   ├── processed/        # Transformierte Eingabedaten
 │   └── config.py         # Farben, Metrikdefinitionen
-├── utils/
-│   ├── plot_utils/       # Plotfunktionen pro Bereich (data.py, core.py etc.)
-│   ├── compute_stats.py  # Statistische Hilfsfunktionen
-│   ├── transform_lt.py   # LT-spezifische Transformationen
-│   └── transform_por.py  # POR-spezifische Transformationen
-├── requirements.txt      # Abhängigkeiten
-└── README.md             # Diese Datei
+├── layout/               # Tab layouts
+├── utils/                # Plot & stats utils
+├── requirements.txt      # Dependencies
+└── README.md             # This file
 ```
 </pre>
 
+## Installation & Quickstart
 
-## Voraussetzungen
+Requires **Python 3.10+**
 
-- Python >= 3.8
-- Empfohlen: virtuelles Environment
-
-## Installation
-
+```bash
+# Clone repo
 git clone https://github.com/gabrieljonathanabebe/openoa-dashboard.git
 cd openoa-dashboard
+
+# (Optional) create virtual environment
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-
-## Start
-
+# Run app
 python app.py
+```
 
-Das Dashboard ist dann erreichbar unter:
+App will be available at:
 http://127.0.0.1:8050
+
+
+
 
 ## Lizenz
 
-MIT License – siehe LICENSE
+MIT License – see LICENSE
+
+---
 
 ## Autor
 
 Gabriel Jonathan Abebe  
 jonathanabebe@outlook.de
-Projekt im Rahmen einer eigenständigen Windenergieanalyse
+
+---
+
+Hinweis (Deutsch)
+
+Dies ist ein eigenständiges Projekt, das im Rahmen meiner Bachelorarbeit entstanden ist.
+Es dient als praktischer Showcase meiner Kenntnisse in Data Analysis, Dash/Plotly und Python.
+Der Code ist bewusst modular aufgebaut, um Erweiterungen (weitere Datenquellen, Visualisierungen, etc.) einfach zu ermöglichen.
