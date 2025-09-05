@@ -5,6 +5,7 @@ It supports Monte Carlo evaluations, model performance comparisons, uncertainty 
 
 ---
 
+
 ## Features
 
 - Compare multiple reanalysis datasets (ERA5, MERRA2, combined, filtered)
@@ -16,11 +17,13 @@ It supports Monte Carlo evaluations, model performance comparisons, uncertainty 
 
 ---
 
+
 ## Screenshots
 
 **Light Mode**
 
 ![Light Mode](assets/readme/screenshot-light.png)
+
 
 **Dark Mode**
 
@@ -28,24 +31,24 @@ It supports Monte Carlo evaluations, model performance comparisons, uncertainty 
 
 ---
 
+
 ## Project structure
 
-<pre>
 ```
 openoa-dashboard/
 ├── app.py                # Main Dash application
 ├── assets/               # CSS
 ├── callbacks/            # Dash callbacks per tab
 ├── data/
-│   ├── raw/              # Eingabedaten (CSV-Simulationsergebnisse)
-│   ├── processed/        # Transformierte Eingabedaten
-│   └── config.py         # Farben, Metrikdefinitionen
+│   ├── raw/              # Input data (CSV simulation results)
+│   ├── processed/        # Processed data
+│   └── config.py         # Colors, metric definitions
 ├── layout/               # Tab layouts
 ├── utils/                # Plot & stats utils
 ├── requirements.txt      # Dependencies
 └── README.md             # This file
 ```
-</pre>
+
 
 ## Installation & Quickstart
 
@@ -75,9 +78,10 @@ http://127.0.0.1:8050
 
 ## Lizenz
 
-MIT License – see LICENSE
+MIT License – see [LICENSE](LICENSE)
 
 ---
+
 
 ## Autor
 
@@ -85,6 +89,7 @@ Gabriel Jonathan Abebe
 jonathanabebe@outlook.de
 
 ---
+
 
 Hinweis (Deutsch)
 
